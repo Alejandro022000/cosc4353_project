@@ -32,7 +32,7 @@
                 $conn = new PDO("sqlsrv:server = tcp:mycosc4353.database.windows.net,1433; Database = mydatabase", "aleadmin", "456456asdAa!");
                 $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 
-                $stmt = $conn->query("SELECT ClientCode, SystemName, Results, InsertDatetime, UpdateDatetime FROM yourTableName");
+                $stmt = $conn->query("SELECT ClientCode, SystemName, Results, InsertDatetime, UpdateDatetime FROM Test");
                 while ($row = $stmt->fetch()) {
                     echo "<tr>
                             <td>{$row['ClientCode']}</td>
