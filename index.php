@@ -16,38 +16,35 @@
 <body>
     <h1>Welcome to My Page</h1>
     <p>This is a paragraph on my first HTML page.</p>
-    <table>
-        <thead>
-            <tr>
-                <th>ClientCode</th>
-                <th>SystemName</th>
-                <th>Results</th>
-                <th>InsertDatetime</th>
-                <th>UpdateDatetime</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            try {
-                $conn = new PDO("sqlsrv:server = tcp:mycosc4353.database.windows.net,1433; Database = mydatabase", "aleadmin", "456456asdAa!");
-                $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                
-                $stmt = $conn->query("SELECT ClientCode, SystemName, Results, InsertDatetime, UpdateDatetime FROM Test");
-                while ($row = $stmt->fetch()) {
-                    echo "<tr>
-                            <td>{$row['ClientCode']}</td>
-                            <td>{$row['SystemName']}</td>
-                            <td>{$row['Results']}</td>
-                            <td>{$row['InsertDatetime']}</td>
-                            <td>{$row['UpdateDatetime']}</td>
-                          </tr>";
-                }
-            } catch (PDOException $e) {
-                print("Error connecting to SQL Server.");
-                die(print_r($e));
-            }
-            ?>
-        </tbody>
-    </table>
+    <tbody id="dataRows"></tbody>
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    fetch('https://mycosc4353.azurewebsites.net/api.php')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        const tableBody = document.getElementById('dataRows');
+        let rows = '';
+        data.forEach(row => {
+            rows += `<tr>
+                        <td>${row.ClientCode}</td>
+                        <td>${row.SystemName}</td>
+                        <td>${row.Results}</td>
+                        <td>${row.InsertDatetime}</td>
+                        <td>${row.UpdateDatetime}</td>
+                    </tr>`;
+        });
+        tableBody.innerHTML = rows;
+    })
+    .catch(error => {
+        console.error('There has been a problem with your fetch operation:', error);
+    });
+});
+</script>
+
 </body>
 </html>
