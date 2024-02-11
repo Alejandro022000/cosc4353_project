@@ -31,11 +31,11 @@ document.addEventListener("DOMContentLoaded", function() {
         let rows = '';
         data.forEach(row => {
             rows += `<tr>
-                        <td>${row.ClientCode}</td>
-                        <td>${row.SystemName}</td>
+                        <td>${row.Client Code}</td>
+                        <td>${row.System Name}</td>
                         <td>${row.Results}</td>
-                        <td>${row.InsertDatetime}</td>
-                        <td>${row.UpdateDatetime}</td>
+                        <td>${row.Insert Date}</td>
+                        <td>${row.Update Date}</td>
                     </tr>`;
         });
         tableBody.innerHTML = rows;
