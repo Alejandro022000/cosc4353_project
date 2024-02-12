@@ -6,10 +6,11 @@ header('Access-Control-Allow-Origin: *');
 
 // Function to connect to the database
 function connectToDatabase() {
-    $serverName = "tcp:myserverale.database.windows.net,1433";
-    $database = "mydatabase";
-    $username = "aleadmin";
-    $password = "456456asdAa!"; 
+
+    $serverName = getenv('DB_SERVER');
+    $database = getenv('DB_DATABASE');
+    $username = getenv('DB_USERNAME');
+    $password = getenv('DB_PASSWORD');
     
     try {
         $conn = new PDO("sqlsrv:server=$serverName;Database=$database", $username, $password);
