@@ -26,38 +26,32 @@
                 <th>Update Datetime</th>
             </tr>
         </thead>
-        <tbody id="dataRows"></tbody>
+        <tbody>
+            <?php
+            try {
+                $conn = new PDO("sqlsrv:server = tcp:myserverale.database.windows.net,1433; Database = mydatabase", "aleadmin", "456456asdAa!");
+                $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+                $sql = "SELECT ClientCode, SystemName, Results, InsertDatetime, UpdateDatetime FROM Test";
+                $stmt = $conn->prepare($sql);
+                $stmt->execute();
+
+                // set the resulting array to associative
+                $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+                foreach($stmt->fetchAll() as $row) {
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($row['ClientCode']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['SystemName']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['Results']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['InsertDatetime']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['UpdateDatetime']) . "</td>";
+                    echo "</tr>";
+                }
+            } catch(PDOException $e) {
+                echo "Error: " . $e->getMessage();
+            }
+            ?>
+        </tbody>
     </table>
-
-    <script>
-document.addEventListener("DOMContentLoaded", function() {
-    fetch('https://4353.azurewebsites.net/api/api.php')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        const tableBody = document.getElementById('dataRows');
-        let rows = '';
-        data.forEach(row => {
-            rows += `<tr>
-            <td>${row.ClientCode}</td> <!-- Corrected Property Names -->
-            <td>${row.SystemName}</td> <!-- Corrected Property Names -->
-            <td>${row.Results}</td>
-            <td>${row.InsertDatetime}</td> <!-- Corrected Property Names -->
-            <td>${row.UpdateDatetime}</td> <!-- Corrected Property Names -->
-         </tr>`;
-
-        });
-        tableBody.innerHTML = rows;
-    })
-    .catch(error => {
-        console.error('There has been a problem with your fetch operation:', error);
-    });
-});
-</script>
-
 </body>
 </html>
