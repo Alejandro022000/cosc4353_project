@@ -16,10 +16,22 @@
 <body>
     <h1>Welcome to My Page</h1>
     <p>This is a paragraph on my first HTML page.</p>
-    <tbody id="dataRows"></tbody>
+    <table>
+        <thead>
+            <tr>
+                <th>Client Code</th>
+                <th>System Name</th>
+                <th>Results</th>
+                <th>Insert Datetime</th>
+                <th>Update Datetime</th>
+            </tr>
+        </thead>
+        <tbody id="dataRows"></tbody>
+    </table>
+
     <script>
 document.addEventListener("DOMContentLoaded", function() {
-    fetch('https://mycosc4353.azurewebsites.net/api.php')
+    fetch('https://mycosc4353.azurewebsites.net/api/api.php')
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -31,12 +43,13 @@ document.addEventListener("DOMContentLoaded", function() {
         let rows = '';
         data.forEach(row => {
             rows += `<tr>
-                        <td>${row.Client Code}</td>
-                        <td>${row.System Name}</td>
-                        <td>${row.Results}</td>
-                        <td>${row.Insert Date}</td>
-                        <td>${row.Update Date}</td>
-                    </tr>`;
+            <td>${row.ClientCode}</td> <!-- Corrected Property Names -->
+            <td>${row.SystemName}</td> <!-- Corrected Property Names -->
+            <td>${row.Results}</td>
+            <td>${row.InsertDatetime}</td> <!-- Corrected Property Names -->
+            <td>${row.UpdateDatetime}</td> <!-- Corrected Property Names -->
+         </tr>`;
+
         });
         tableBody.innerHTML = rows;
     })
