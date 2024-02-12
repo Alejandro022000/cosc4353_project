@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
 // Function to connect to the database
 function connectToDatabase() {
-    $serverName = "tcp:myserverale.database.windows.net,1433";
+    $serverName = "tcp:myserverale.database.windows.net";
     $database = "mydatabase";
     $username = "aleadmin";
     $password = "456456asdAa!"; 
