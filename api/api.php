@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
 // Function to connect to the database
 function connectToDatabase() {
-    $serverName = getenv("SERVER_NAME");
+    $serverName = 'tcp:myserverale.database.windows.net';
     $database = getenv("DATABASE_NAME");
     $username = getenv("DATABASE_USERNAME");
     $password = getenv("DATABASE_PASSWORD");
