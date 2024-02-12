@@ -28,27 +28,40 @@
         </thead>
         <tbody>
             <?php
-            try {
-                $conn = new PDO("sqlsrv:server = tcp:myserverale.database.windows.net,1433; Database = mydatabase", "aleadmin", "456456asdAa!");
-                $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            // API URL
+            $apiUrl = 'https://4353.azurewebsites.net/api/api.php?action=get_table';
+            
+            // Initialize CURL
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $apiUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            
+            // Execute CURL, fetch the JSON data and decode
+            $result = curl_exec($ch);
+            curl_close($ch);
+            
+            // Check if the result is not false
+            if ($result !== false) {
+                // Decode the JSON data into a PHP array
+                $data = json_decode($result, true);
 
-                $sql = "SELECT ClientCode, SystemName, Results, InsertDatetime, UpdateDatetime FROM Test";
-                $stmt = $conn->prepare($sql);
-                $stmt->execute();
-
-                // set the resulting array to associative
-                $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
-                foreach($stmt->fetchAll() as $row) {
-                    echo "<tr>";
-                    echo "<td>" . htmlspecialchars($row['ClientCode']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['SystemName']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['Results']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['InsertDatetime']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['UpdateDatetime']) . "</td>";
-                    echo "</tr>";
+                // Check if there's an error key in the response
+                if (isset($data['error'])) {
+                    echo "<tr><td colspan='5'>Error: " . htmlspecialchars($data['error']) . "</td></tr>";
+                } else {
+                    // Iterate through the array and populate the table
+                    foreach ($data as $row) {
+                        echo "<tr>";
+                        echo "<td>" . htmlspecialchars($row['ClientCode']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['SystemName']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['Results']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['InsertDatetime']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['UpdateDatetime']) . "</td>";
+                        echo "</tr>";
+                    }
                 }
-            } catch(PDOException $e) {
-                echo "Error: " . $e->getMessage();
+            } else {
+                echo "<tr><td colspan='5'>Error fetching data.</td></tr>";
             }
             ?>
         </tbody>
