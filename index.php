@@ -1,17 +1,3 @@
-<?php
-    $serverName = getenv("SERVER_NAME");
-    $database = getenv("DATABASE_NAME");
-    $username = getenv("DATABASE_USERNAME");
-    $password = getenv("DATABASE_PASSWORD");
-
-    //console log the servername, database, username, and password
-    echo "<script>console.log('serverName: " . $serverName . "');</script>";
-    echo "<script>console.log('database: " . $database . "');</script>";
-    echo "<script>console.log('username: " . $username . "');</script>";
-    echo "<script>console.log('password: " . $password . "');</script>";
-    echo "<script>console.log('password:');</script>";
-    ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
