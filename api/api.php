@@ -19,6 +19,25 @@ function connectToDatabase() {
         die(json_encode(array("error" => $e->getMessage())));
     }
 }
+function userSignup() {
+    $data = json_decode(file_get_contents('php://input'), true);
+    $username = $data['username'];
+    $password = $data['password'];
+
+
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);    // Hash the password before storing it
+    $conn = connectToDatabase();
+    $sql = "INSERT INTO users (username, password) VALUES (:username, :password)";
+
+    try {
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['username' => $username, 'password' => $hashedPassword]);
+        echo json_encode(array("message" => "User successfully registered"));
+    } catch (PDOException $e) {
+        echo json_encode(array("error" => $e->getMessage()));
+    }
+}
+
 
 // Function to get table data
 function getTableData() {
@@ -41,6 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         switch ($action) {
             case 'get_table':
                 getTableData();
+                break;
+            case 'signup':
+                userSignup();
                 break;
             // Add more cases for other actions
             default:

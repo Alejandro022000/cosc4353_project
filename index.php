@@ -1,75 +1,161 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Database Table</title>
-    <meta charset="UTF-8">
-    <style>
-        table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Front Page</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<style>
+  body {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="white"/></svg>');
+    background-size: cover;
+    background-position: center;
+  }
+  .navbar-brand {
+    font-weight: bold;
+    color: #fff !important;
+  }
+  .btn-outline-primary {
+    border-color: #007bff;
+    color: #007bff;
+  }
+  .btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #fff;
+  }
+</style>
 </head>
 <body>
-    <h1>Welcome to My Page</h1>
-    <p>This is a paragraph on my first HTML page.</p>
-    <table id="dataTable">
-        <thead>
-            <tr>
-                <th>Client Code</th>
-                <th>System Name</th>
-                <th>Results</th>
-                <th>Insert Datetime</th>
-                <th>Update Datetime</th>
-            </tr>
-        </thead>
-        <tbody id="tableBody">
-            <!-- Data rows will be inserted here using JavaScript -->
-        </tbody>
-    </table>
 
-    <script>
-        // Define the API URL
-        const apiUrl = 'https://4353.azurewebsites.net/api/api.php?action=get_table';
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">Your Logo Here</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal">Login</a>
+      </li>
+      <li class="nav-item">
+        <a class="btn btn-outline-primary ml-2" href="#" data-toggle="modal" data-target="#signupModal">Sign Up</a>
+      </li>
+    </ul>
+  </div>
+</nav>
 
-        // Function to fetch data and update the table
-        async function fetchDataAndUpdateTable() {
-            try {
-                // Fetch data from the API
-                const response = await fetch(apiUrl);
-                const data = await response.json();
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginModalLabel">Login</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="username-login">Username</label>
+            <input type="text" class="form-control" id="username-login" placeholder="Enter username" required>
+          </div>
+          <div class="form-group">
+            <label for="password-login">Password</label>
+            <input type="password" class="form-control" id="password-login" placeholder="Password" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Sign Up Modal -->
+<div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="signupModalLabel">Sign Up</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="signupForm">
+          <div class="form-group">
+            <label for="username-signup">Username</label>
+            <input type="text" class="form-control" id="username-signup" placeholder="Choose a username" required>
+          </div>
+          <div class="form-group">
+            <label for="password-signup">Password</label>
+            <input type="password" class="form-control" id="password-signup" placeholder="Create a password" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">
+          </div>
+          <div class="form-group">
+            <label for="password-confirm">Confirm Password</label>
+            <input type="password" class="form-control" id="password-confirm" placeholder="Confirm password" required>
+          </div>
+          <!-- Error message placeholder -->
+          <div id="passwordError" class="form-group" style="display: none;">
+            <p class="text-danger">Passwords do not match.</p>
+          </div>
+          <button type="submit" class="btn btn-primary">Sign Up</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
-                // Reference to the table body
-                const tableBody = document.getElementById('tableBody');
+<script>
+document.getElementById('signupForm').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Prevent the default form submission
 
-                // Check if there's an error key in the response
-                if (data.error) {
-                    tableBody.innerHTML = `<tr><td colspan='5'>Error: ${data.error}</td></tr>`;
-                } else {
-                    // Iterate through the data and append rows to the table
-                    data.forEach(row => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${row.ClientCode}</td>
-                            <td>${row.SystemName}</td>
-                            <td>${row.Results}</td>
-                            <td>${row.InsertDatetime}</td>
-                            <td>${row.UpdateDatetime}</td>
-                        `;
-                        tableBody.appendChild(tr);
-                    });
-                }
-            } catch (error) {
-                // Handle errors (e.g., network error, invalid JSON response)
-                document.getElementById('tableBody').innerHTML = `<tr><td colspan='5'>Error fetching data.</td></tr>`;
-            }
+    var password = document.getElementById('password-signup').value;
+    var confirmPassword = document.getElementById('password-confirm').value;
+    var username = document.getElementById('username-signup').value;
+    var passwordError = document.getElementById('passwordError');
+
+    // Check if passwords match
+    if (password !== confirmPassword) {
+        passwordError.style.display = 'block';
+        return; // Stop the function here
+    } else {
+        passwordError.style.display = 'none';
+    }
+
+    // Define the API URL for signup
+    const signupUrl = 'https://4353.azurewebsites.net/api/api.php?action=signup';
+
+    try {
+        // Send the signup request to the server
+        const response = await fetch(signupUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username: username, password: password })
+        });
+
+        const data = await response.json();
+
+        // Handle response from the server
+        if (data.error) {
+            // Handle error
+            console.error('Signup Error:', data.error);
+            // Optionally update the UI to inform the user
+        } else {
+            // Handle successful signup
+            // Optionally redirect the user or inform them of success
+            console.log('Signup Successful', data);
         }
+    } catch (error) {
+        console.error('Error during signup:', error);
+    }
+});
+</script>
 
-        // Call the function to fetch data and update the table when the page loads
-        fetchDataAndUpdateTable();
-    </script>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 </html>
