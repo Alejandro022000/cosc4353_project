@@ -16,7 +16,7 @@
 <body>
     <h1>Welcome to My Page</h1>
     <p>This is a paragraph on my first HTML page.</p>
-    <table>
+    <table id="dataTable">
         <thead>
             <tr>
                 <th>Client Code</th>
@@ -26,45 +26,50 @@
                 <th>Update Datetime</th>
             </tr>
         </thead>
-        <tbody>
-            <?php
-            // API URL
-            $apiUrl = 'https://4353.azurewebsites.net/api/api.php?action=get_table';
-            
-            // Initialize CURL
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $apiUrl);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            
-            // Execute CURL, fetch the JSON data and decode
-            $result = curl_exec($ch);
-            curl_close($ch);
-            
-            // Check if the result is not false
-            if ($result !== false) {
-                // Decode the JSON data into a PHP array
-                $data = json_decode($result, true);
-
-                // Check if there's an error key in the response
-                if (isset($data['error'])) {
-                    echo "<tr><td colspan='5'>Error: " . htmlspecialchars($data['error']) . "</td></tr>";
-                } else {
-                    // Iterate through the array and populate the table
-                    foreach ($data as $row) {
-                        echo "<tr>";
-                        echo "<td>" . htmlspecialchars($row['ClientCode']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['SystemName']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['Results']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['InsertDatetime']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['UpdateDatetime']) . "</td>";
-                        echo "</tr>";
-                    }
-                }
-            } else {
-                echo "<tr><td colspan='5'>Error fetching data.</td></tr>";
-            }
-            ?>
+        <tbody id="tableBody">
+            <!-- Data rows will be inserted here using JavaScript -->
         </tbody>
     </table>
+
+    <script>
+        // Define the API URL
+        const apiUrl = 'https://4353.azurewebsites.net/api/api.php?action=get_table';
+
+        // Function to fetch data and update the table
+        async function fetchDataAndUpdateTable() {
+            try {
+                // Fetch data from the API
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                // Reference to the table body
+                const tableBody = document.getElementById('tableBody');
+
+                // Check if there's an error key in the response
+                if (data.error) {
+                    tableBody.innerHTML = `<tr><td colspan='5'>Error: ${data.error}</td></tr>`;
+                } else {
+                    // Iterate through the data and append rows to the table
+                    data.forEach(row => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${row.ClientCode}</td>
+                            <td>${row.SystemName}</td>
+                            <td>${row.Results}</td>
+                            <td>${row.InsertDatetime}</td>
+                            <td>${row.UpdateDatetime}</td>
+                        `;
+                        tableBody.appendChild(tr);
+                    });
+                }
+            } catch (error) {
+                // Handle errors (e.g., network error, invalid JSON response)
+                document.getElementById('tableBody').innerHTML = `<tr><td colspan='5'>Error fetching data.</td></tr>`;
+            }
+        }
+
+        // Call the function to fetch data and update the table when the page loads
+        fetchDataAndUpdateTable();
+    </script>
 </body>
 </html>

@@ -1,6 +1,8 @@
 <?php
 // Set header for JSON response
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *'); 
+
 
 // Function to connect to the database
 function connectToDatabase() {
