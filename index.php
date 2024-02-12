@@ -31,7 +31,7 @@
 
     <script>
 document.addEventListener("DOMContentLoaded", function() {
-    fetch('https://mycosc4353.azurewebsites.net/api/api.php')
+    fetch('https://4353.azurewebsites.net/api/api.php')
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
