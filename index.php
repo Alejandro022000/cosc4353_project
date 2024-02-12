@@ -28,7 +28,7 @@
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Your Logo Here</a>
+  <a class="navbar-brand" href="#">TODO LOGO</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -44,6 +44,14 @@
   </div>
 </nav>
 
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-6">
+      <h1>TODO</h1>
+      <p>Make this page look better</p>
+    </div>
+  </div>
+</div>
 <!-- Login Modal -->
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -158,12 +166,12 @@ document.getElementById('signupForm').addEventListener('submit', async function(
 
         const data = await response.json();
 
-        // Handle response from the server
         if (data.error) {
             // Handle error
             console.error('Signup Error:', data.error);
         } else {
             // Show the success modal
+            $('#signupModal').modal('hide');
             $('#signupSuccessModal').modal('show');
         }
     } catch (error) {
