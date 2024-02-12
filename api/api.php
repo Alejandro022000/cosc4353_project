@@ -17,10 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
 // Function to connect to the database
 function connectToDatabase() {
-    $serverName = "tcp:myserverale.database.windows.net";
-    $database = "mydatabase";
-    $username = "aleadmin";
-    $password = "456456asdAa!"; 
+    $serverName = getenv("SERVER_NAME");
+    $database = getenv("DATABASE_NAME");
+    $username = getenv("DATABASE_USERNAME");
+    $password = getenv("DATABASE_PASSWORD");
     
     try {
         $conn = new PDO("sqlsrv:server=$serverName;Database=$database", $username, $password);
