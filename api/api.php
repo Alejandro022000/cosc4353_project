@@ -60,7 +60,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         switch ($action) {
             case 'get_table':
                 getTableData();
+                break;           
+            // Add more cases for other actions
+            default:
+                echo json_encode(array("error" => "Unknown action"));
                 break;
+        }
+    } else {
+        echo json_encode(array("error" => "No action specified"));
+    }
+}
+else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_GET['action'])) {
+        $action = $_GET['action'];
+        switch ($action) {
             case 'signup':
                 userSignup();
                 break;
@@ -72,7 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else {
         echo json_encode(array("error" => "No action specified"));
     }
-} else {
+}
+ else {
     echo json_encode(array("error" => "Invalid request method"));
 }
 ?>
