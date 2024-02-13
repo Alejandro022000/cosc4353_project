@@ -36,9 +36,23 @@ function userSignup() {
     $username = $data['username'];
     $password = $data['password'];
 
-
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);    // Hash the password before storing it
+    // Connect to the database
     $conn = connectToDatabase();
+
+    // Check if the username already exists
+    $checkSql = "SELECT COUNT(*) FROM users WHERE username = :username";
+    $checkStmt = $conn->prepare($checkSql);
+    $checkStmt->execute(['username' => $username]);
+    $usernameCount = $checkStmt->fetchColumn();
+
+    if ($usernameCount > 0) {
+        // Username already exists
+        echo json_encode(array("error" => "Username already exists."));
+        return; // Stop the function execution
+    }
+
+    // Username does not exist, proceed with signup
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT); // Hash the password before storing it
     $sql = "INSERT INTO users (username, password) VALUES (:username, :password)";
 
     try {
@@ -49,6 +63,7 @@ function userSignup() {
         echo json_encode(array("error" => $e->getMessage()));
     }
 }
+
 
 // Function to get table data
 function getTableData() {

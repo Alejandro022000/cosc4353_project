@@ -35,15 +35,29 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
+      <!-- Login/Signup Links -->
+      <li class="nav-item" id="loginNavItem">
         <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal">Login</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" id="signupNavItem">
         <a class="btn btn-outline-primary ml-2" href="#" data-toggle="modal" data-target="#signupModal">Sign Up</a>
+      </li>
+      
+      <!-- User Info Dropdown (Hidden by default) -->
+      <li id="userInfoDropdown" class="nav-item dropdown" style="display: none;">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          User Name
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Account</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" id="signOutButton" href="#">Sign Out</a>
+        </div>
       </li>
     </ul>
   </div>
 </nav>
+
 
 <div class="container mt-5">
   <div class="row">
@@ -96,6 +110,9 @@
             <label for="username-signup">Username</label>
             <input type="text" class="form-control" id="username-signup" placeholder="Choose a username" required>
           </div>
+          <div id="signupError" class="form-group" style="display: none;">
+              <!-- Error messages will be inserted here -->
+          </div>
           <div class="form-group">
             <label for="password-signup">Password</label>
             <input type="password" class="form-control" id="password-signup" placeholder="Create a password" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">
@@ -135,6 +152,7 @@
   </div>
 </div>
 
+
 <script>
 document.getElementById('signupForm').addEventListener('submit', async function(event) {
     event.preventDefault(); // Prevent the default form submission
@@ -143,10 +161,19 @@ document.getElementById('signupForm').addEventListener('submit', async function(
     var confirmPassword = document.getElementById('password-confirm').value;
     var username = document.getElementById('username-signup').value;
     var passwordError = document.getElementById('passwordError');
+    var signupError = document.getElementById('signupError'); // Placeholder for signup errors
+
+    // Ensure the signupError div exists in your HTML, or create it dynamically if needed
+    if (!signupError) {
+        signupError = document.createElement('div');
+        signupError.id = 'signupError';
+        document.getElementById('signupForm').prepend(signupError);
+    }
 
     // Check if passwords match
     if (password !== confirmPassword) {
         passwordError.style.display = 'block';
+        signupError.style.display = 'none'; // Hide signup error if it's visible
         return; // Stop the function here
     } else {
         passwordError.style.display = 'none';
@@ -168,17 +195,21 @@ document.getElementById('signupForm').addEventListener('submit', async function(
         const data = await response.json();
 
         if (data.error) {
-            // Handle error
-            console.error('Signup Error:', data.error);
+            // Display error message from the server
+            signupError.style.display = 'block';
+            signupError.innerHTML = `<p class="text-danger">${data.error}</p>`; // Update this line to match your HTML structure
+            // Optionally, hide the modal here to show the error
         } else {
             // Show the success modal
             $('#signupModal').modal('hide');
             $('#signupSuccessModal').modal('show');
+            signupError.style.display = 'none'; // Ensure any previous error message is hidden
         }
     } catch (error) {
         console.error('Error during signup:', error);
     }
 });
+
 
 document.getElementById('loginModal').addEventListener('submit', async function(event) {
     event.preventDefault(); // Prevent the default form submission
@@ -213,6 +244,21 @@ document.getElementById('loginModal').addEventListener('submit', async function(
     } catch (error) {
         console.error('Error during login:', error);
     }
+});
+document.addEventListener('DOMContentLoaded', function() {
+    const userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    if (userInfo) {
+        // Hide Login/Signup and Show User Info Dropdown
+        document.getElementById('loginNavItem').style.display = 'none';
+        document.getElementById('signupNavItem').style.display = 'none';
+        document.getElementById('userInfoDropdown').style.display = 'block';
+        document.getElementById('navbarDropdown').textContent = userInfo.username; // Use username or name based on your session structure
+    }
+
+    document.getElementById('signOutButton').addEventListener('click', function() {
+        sessionStorage.removeItem('userInfo'); // Remove user info from session storage
+        window.location.reload(); // Reload the page to reflect the change
+    });
 });
 
 </script>
