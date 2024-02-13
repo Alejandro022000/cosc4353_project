@@ -73,7 +73,7 @@ function getLoginData() {
     $password = $data['password'];
 
     $conn = connectToDatabase();
-    $sql = "SELECT id, username, password FROM users WHERE username = :username";
+    $sql = "SELECT id, username, password, name, address1, address2, city FROM users WHERE username = :username";
 
     try {
         $stmt = $conn->prepare($sql);
