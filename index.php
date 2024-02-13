@@ -25,6 +25,7 @@
   }
 </style>
 </head>
+
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -78,6 +79,7 @@
     </div>
   </div>
 </div>
+
 <!-- Sign Up Modal -->
 <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -133,7 +135,6 @@
   </div>
 </div>
 
-
 <script>
 document.getElementById('signupForm').addEventListener('submit', async function(event) {
     event.preventDefault(); // Prevent the default form submission
@@ -178,6 +179,42 @@ document.getElementById('signupForm').addEventListener('submit', async function(
         console.error('Error during signup:', error);
     }
 });
+
+document.getElementById('loginModal').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    var username = document.getElementById('username-login').value;
+    var password = document.getElementById('password-login').value;
+
+    // Define the API URL for login
+    const loginUrl = 'https://4353.azurewebsites.net/api/api.php?action=get_user_login';
+
+    try {
+        // Send the login request to the server using POST
+        const response = await fetch(loginUrl, {
+            method: 'POST', // Changed to POST
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username: username, password: password })
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            // Handle error
+            console.error('Login Error:', data.error);
+        } else {
+            // Assuming data contains user info on successful login
+            sessionStorage.setItem('userInfo', JSON.stringify(data)); // Save user info in session storage
+            $('#loginModal').modal('hide');
+            // Redirect or update UI as needed
+        }
+    } catch (error) {
+        console.error('Error during login:', error);
+    }
+});
+
 </script>
 
 
