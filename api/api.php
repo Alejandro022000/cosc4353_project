@@ -30,6 +30,7 @@ function connectToDatabase() {
         die(json_encode(array("error" => $e->getMessage())));
     }
 }
+
 function userSignup() {
     $data = json_decode(file_get_contents('php://input'), true);
     $username = $data['username'];
@@ -49,7 +50,6 @@ function userSignup() {
     }
 }
 
-
 // Function to get table data
 function getTableData() {
     $conn = connectToDatabase();
@@ -64,6 +64,39 @@ function getTableData() {
     }
 }
 
+// Function to get user data
+function getLoginData() {
+    session_start(); // Start the session to manage login state
+
+    $data = json_decode(file_get_contents('php://input'), true);
+    $username = $data['username'];
+    $password = $data['password'];
+
+    $conn = connectToDatabase();
+    $sql = "SELECT id, username, password FROM users WHERE username = :username";
+
+    try {
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && password_verify($password, $user['password'])) {
+            // Remove password from the array before sending back to the client
+            unset($user['password']);
+            // Save user info in session
+            $_SESSION['user'] = $user;
+
+            echo json_encode($user); // Return user data (without password)
+        } else {
+            echo json_encode(array("error" => "Invalid credentials"));
+        }
+    } catch (PDOException $e) {
+        echo json_encode(array("error" => $e->getMessage()));
+    }
+}
+
+
 // Basic routing
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['action'])) {
@@ -71,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         switch ($action) {
             case 'get_table':
                 getTableData();
-                break;           
+                break;
             // Add more cases for other actions
             default:
                 echo json_encode(array("error" => "Unknown action"));
@@ -87,6 +120,9 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         switch ($action) {
             case 'signup':
                 userSignup();
+                break;                           
+            case 'get_user_login':
+                getLoginData();
                 break;
             // Add more cases for other actions
             default:
