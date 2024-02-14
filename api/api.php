@@ -111,36 +111,7 @@ function getLoginData() {
     }
 }
 
-function updateUserinfo() {
-    session_start(); // Start the session to manage login state
 
-    $data = json_decode(file_get_contents('php://input'), true);
-    $username = $data['username'];
-    $password = $data['password'];
-
-    $conn = connectToDatabase();
-    $sql = "SELECT id, username, password, name, address1, address2, city FROM users WHERE username = :username";
-
-    try {
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-        $stmt->execute();
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($user && password_verify($password, $user['password'])) {
-            // Remove password from the array before sending back to the client
-            unset($user['password']);
-            // Save user info in session
-            $_SESSION['user'] = $user;
-
-            echo json_encode($user); // Return user data (without password)
-        } else {
-            echo json_encode(array("error" => "Invalid credentials"));
-        }
-    } catch (PDOException $e) {
-        echo json_encode(array("error" => $e->getMessage()));
-    }
-}
 function updateUserInformation() {
     $data = json_decode(file_get_contents('php://input'), true);
     $id = $data['id'];
@@ -196,7 +167,7 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 getLoginData();
                 break;
             case 'update_user':
-                updateUserinfo();
+                updateUserInformation();
                 break;
             // Add more cases for other actions
             default:
