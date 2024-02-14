@@ -130,3 +130,49 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
   updateUserInterface();
 });
+
+document
+  .getElementById("saveChangesButton")
+  .addEventListener("click", async function () {
+    const name = document.getElementById("editName").value;
+    const address1 = document.getElementById("editAddress1").value;
+    const address2 = document.getElementById("editAddress2").value;
+    const city = document.getElementById("editCity").value;
+
+    const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+    const userId = userInfo.id; // Assuming your user info includes an id
+
+    // Define the API URL for updating user information
+    const updateUrl =
+      "https://4353.azurewebsites.net/api/api.php?action=update_user";
+
+    try {
+      // Send the update request to the server
+      const response = await fetch(updateUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: userId,
+          name: name,
+          address1: address1,
+          address2: address2,
+          city: city,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        console.error("Update Error:", data.error);
+      } else {
+        // Update the session storage with the new user info
+        sessionStorage.setItem("userInfo", JSON.stringify(data));
+        updateUserInterface(); // Update the UI with the new information
+        $("#editUserModal").modal("hide"); // Close the edit modal
+      }
+    } catch (error) {
+      console.error("Error during update:", error);
+    }
+  });
