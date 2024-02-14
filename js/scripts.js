@@ -124,13 +124,14 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("click", function () {
       sessionStorage.removeItem("userInfo"); // Remove user info from session storage
       updateUserInterface(); // Update UI to show login/signup options
+      //redirect to home page
+      window.location.href = "/index.html";
     });
 });
 
 document.addEventListener("DOMContentLoaded", function () {
   updateUserInterface();
 });
-
 document
   .getElementById("saveChangesButton")
   .addEventListener("click", async function () {
@@ -138,16 +139,16 @@ document
     const address1 = document.getElementById("editAddress1").value;
     const address2 = document.getElementById("editAddress2").value;
     const city = document.getElementById("editCity").value;
+    const state = document.getElementById("editState").value;
+    const zipcode = document.getElementById("editZipcode").value;
 
     const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
-    const userId = userInfo.id; // Assuming your user info includes an id
+    const userId = userInfo.id;
 
-    // Define the API URL for updating user information
     const updateUrl =
       "https://4353.azurewebsites.net/api/api.php?action=update_user";
 
     try {
-      // Send the update request to the server
       const response = await fetch(updateUrl, {
         method: "POST",
         headers: {
@@ -159,6 +160,8 @@ document
           address1: address1,
           address2: address2,
           city: city,
+          state: state,
+          zipcode: zipcode,
         }),
       });
 
@@ -167,10 +170,9 @@ document
       if (data.error) {
         console.error("Update Error:", data.error);
       } else {
-        // Update the session storage with the new user info
         sessionStorage.setItem("userInfo", JSON.stringify(data));
-        updateUserInterface(); // Update the UI with the new information
-        $("#editUserModal").modal("hide"); // Close the edit modal
+        updateUserInterface();
+        $("#editUserModal").modal("hide");
       }
     } catch (error) {
       console.error("Error during update:", error);

@@ -88,7 +88,7 @@ function getLoginData() {
     $password = $data['password'];
 
     $conn = connectToDatabase();
-    $sql = "SELECT id, username, password, name, address1, address2, city FROM users WHERE username = :username";
+    $sql = "SELECT id, username, password, name, address1, address2, city, state, zipcode FROM users WHERE username = :username";
 
     try {
         $stmt = $conn->prepare($sql);
@@ -111,7 +111,6 @@ function getLoginData() {
     }
 }
 
-
 function updateUserInformation() {
     $data = json_decode(file_get_contents('php://input'), true);
     $id = $data['id'];
@@ -119,9 +118,11 @@ function updateUserInformation() {
     $address1 = $data['address1'];
     $address2 = $data['address2'];
     $city = $data['city'];
+    $state = $data['state'];
+    $zipcode = $data['zipcode'];
 
     $conn = connectToDatabase();
-    $sql = "UPDATE users SET name = :name, address1 = :address1, address2 = :address2, city = :city WHERE id = :id";
+    $sql = "UPDATE users SET name = :name, address1 = :address1, address2 = :address2, city = :city, state = :state, zipcode = :zipcode WHERE id = :id";
 
     try {
         $stmt = $conn->prepare($sql);
@@ -130,6 +131,8 @@ function updateUserInformation() {
             ':address1' => $address1,
             ':address2' => $address2,
             ':city' => $city,
+            ':state' => $state,
+            ':zipcode' => $zipcode,
             ':id' => $id
         ]);
         echo json_encode(array("message" => "User information updated successfully"));
@@ -137,6 +140,7 @@ function updateUserInformation() {
         echo json_encode(array("error" => $e->getMessage()));
     }
 }
+
 
 
 // Basic routing
