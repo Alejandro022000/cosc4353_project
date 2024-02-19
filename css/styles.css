@@ -1,6 +1,7 @@
 body {
   background-size: cover;
   background-position: center;
+  font-family: 'Sen';
 }
 .navbar-brand {
   font-weight: bold;
@@ -15,17 +16,13 @@ body {
   color: #fff;
 }
 
-.container {
-  position: relative;
-  min-height: 100vh;
-}
-
 .background-image{
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   width: 100%;
+  display: block;
   height: auto;
-  opacity: 0.5; /* Adjust the opacity as needed */
+  background-position: center top;
   z-index: -1;
 }
