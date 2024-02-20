@@ -14,8 +14,10 @@
     <link rel="stylesheet" href="../css/styles.css" />
     <style>
       #userInfoContainer {
+        display: flex;
         max-width: 600px;
         margin: auto;
+        align-items: center;
       }
 
       #userInfoDetails {
@@ -94,7 +96,7 @@
       </div>
     </nav>
 
-    <div class="container mt-3" id="userInfoContainer" style="display: none">
+    <div class="container mt-3 d-flex justify-content-center align-items-center" id="userInfoContainer" style="display: none">
       <div class="card border-dark">
         <div class="card-header bg-dark text-white">
           <h4>User Information</h4>
@@ -455,7 +457,7 @@
           `;
 
           // Show the user info container
-          document.getElementById("userInfoContainer").style.display = "inline-block";
+          document.getElementById("userInfoContainer").style.display = "block";
         }
       });
     </script>
