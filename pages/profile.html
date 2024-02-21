@@ -10,34 +10,23 @@
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
       crossorigin="anonymous"
     />
-    <link href='https://fonts.googleapis.com/css?family=Sen' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css?family=Sen" rel="stylesheet" />
     <link rel="stylesheet" href="../css/styles.css" />
     <style>
       #userInfoContainer {
-        max-width: 800px;
+        max-width: 600px;
         margin: auto;
-        align-items: center;
-      }
-
-      .custom-width{
-        width: 800px !important;
       }
 
       #userInfoDetails {
-        line-height: 3.0;
-        font-size: large;
-      }
-
-      #userInfoDetails li {
-        font-size: large;
-        margin-right: 20px;
+        line-height: 1.6;
       }
     </style>
   </head>
 
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="#">GallaCo.</a>
+      <a class="navbar-brand" href="../">GallaCo.</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -75,7 +64,7 @@
           <li
             id="userInfoDropdown"
             class="nav-item dropdown"
-            style="display: none;"
+            style="display: none"
           >
             <a
               class="nav-link dropdown-toggle"
@@ -92,11 +81,9 @@
               class="dropdown-menu dropdown-menu-right"
               aria-labelledby="navbarDropdown"
             >
-              <a class="dropdown-item" href="#">Account</a>
+              <a class="dropdown-item" href="quoteform.html">Fuel Form</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Fuel Form</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Fuel History</a>
+              <a class="dropdown-item" href="fuelhistory.html">Fuel History</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" id="signOutButton" href="#">Sign Out</a>
             </div>
@@ -105,35 +92,24 @@
       </div>
     </nav>
 
-    <div class="container mt-3 justify-content-center align-items-center custom-width" id="userInfoContainer">
+    <div class="container mt-3" id="userInfoContainer" style="display: none">
       <div class="card border-dark">
         <div class="card-header bg-dark text-white">
-          <h4>Fuel Quote Form</h4>
+          <h4>User Information</h4>
         </div>
         <div class="card-body">
-          <form>
-          <div class="form-group">
-               <label for="gallonsRequested">Gallons Requested</label>
-              <input type="number" class="form-control" id="gallonsRequested" required>
-           </div>
-           <div class="form-group">
-                 <label for="deliveryAddress">Delivery Address</label>
-                 <input type="text" class="form-control" id="deliveryAddress" >
-                </div>
-                <div class="form-group">
-                  <label for="deliveryDate">Delivery Date</label>
-                  <input type="date" class="form-control" id="deliveryDate">
-              </div>
-              <div class="form-group">
-                <label for="suggestedPrice">Suggested Price / gallon</label>
-                <input type="text" class="form-control" id="suggestedPrice" >
-            </div>
-            <div class="form-group">
-              <label for="totalAmountDue">Total Amount Due</label>
-              <input type="text" class="form-control" id="totalAmountDue" >
-          </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
-         </form>
+          <h5 class="card-title" id="userInfoUsername">Username:</h5>
+          <ul class="list-group list-group-flush" id="userInfoDetails">
+            <!-- User details will be populated here -->
+          </ul>
+          <button
+            type="button"
+            class="btn btn-primary mt-3"
+            data-toggle="modal"
+            data-target="#editUserModal"
+          >
+            Edit
+          </button>
         </div>
       </div>
     </div>
@@ -499,6 +475,5 @@
     ></script>
     <script src="../js/scripts.js"></script>
   </body>
-
-  <img src="fueltruck.jpeg" class="background-image" alt="Fuel Truck">
+  <img src="fueltruck.jpeg" class="background-image" alt="Fuel Truck" />
 </html>
