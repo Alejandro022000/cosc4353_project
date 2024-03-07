@@ -439,36 +439,6 @@
       </div>
     </div>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Check if user information is available in session storage
-        if (sessionStorage.getItem("userInfo")) {
-          // Parse the user info from JSON string to object
-          const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
-
-          // Update the div with user information
-          document.getElementById("userInfoUsername").textContent +=
-            userInfo.username;
-          document.getElementById("userInfoDetails").innerHTML = `
-            <strong>ID:</strong> ${userInfo.id}<br>
-            <strong>Name:</strong> ${userInfo.name || "Not provided"}<br>
-            <strong>Address 1:</strong> ${
-              userInfo.address1 || "Not provided"
-            }<br>
-            <strong>Address 2:</strong> ${
-              userInfo.address2 || "Not provided"
-            }<br>
-            <strong>City:</strong> ${userInfo.city || "Not provided"}
-            <strong>State:</strong> ${userInfo.state || "Not provided"}
-            <strong>Zipcode:</strong> ${userInfo.zipcode || "Not provided"}
-          `;
-
-          // Show the user info container
-          document.getElementById("userInfoContainer").style.display = "block";
-        }
-      });
-    </script>
-
     <script
       src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
       integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

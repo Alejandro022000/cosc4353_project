@@ -6,6 +6,21 @@ function updateUserInterface() {
     document.getElementById("signupNavItem").style.display = "none";
     document.getElementById("userInfoDropdown").style.display = "block";
     document.getElementById("navbarDropdown").textContent = userInfo.username; // Use username or name based on your session structure
+
+    // Update the div with user information
+    document.getElementById("userInfoUsername").textContent += userInfo.username;
+    document.getElementById("userInfoDetails").innerHTML = `
+      <strong>ID:</strong> ${userInfo.id}<br>
+      <strong>Name:</strong> ${userInfo.name || "Not provided"}<br>
+      <strong>Address 1:</strong> ${userInfo.address1 || "Not provided"}<br>
+      <strong>Address 2:</strong> ${userInfo.address2 || "Not provided"}<br>
+      <strong>City:</strong> ${userInfo.city || "Not provided"}
+      <strong>State:</strong> ${userInfo.state || "Not provided"}
+      <strong>Zipcode:</strong> ${userInfo.zipcode || "Not provided"}
+    `;
+
+    // Show the user info container
+    document.getElementById("userInfoContainer").style.display = "block";
   } else {
     // Show Login/Signup and Hide User Info Dropdown
     document.getElementById("loginNavItem").style.display = "block";
@@ -18,7 +33,6 @@ document
   .getElementById("signupForm")
   .addEventListener("submit", async function (event) {
     event.preventDefault(); // Prevent the default form submission
-
     var password = document.getElementById("password-signup").value;
     var confirmPassword = document.getElementById("password-confirm").value;
     var username = document.getElementById("username-signup").value;
@@ -164,7 +178,6 @@ document
           zipcode: zipcode,
         }),
       });
-
       const data = await response.json();
 
       if (data.error) {
