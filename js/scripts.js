@@ -29,6 +29,11 @@ function updateUserInterface() {
   }
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+  updateUserInterface();
+});
+
+
 document
   .getElementById("signupForm")
   .addEventListener("submit", async function (event) {
@@ -85,7 +90,7 @@ document
     } catch (error) {
       console.error("Error during signup:", error);
     }
-  });
+});
 
 document
   .getElementById("loginModal")
@@ -121,7 +126,7 @@ document
     } catch (error) {
       console.error("Error during login:", error);
     }
-  });
+});
 
 document.addEventListener("DOMContentLoaded", function () {
   const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
@@ -146,79 +151,107 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
   updateUserInterface();
 });
-document
-  .getElementById("saveChangesButton")
-  .addEventListener("click", async function () {
-    const name = document.getElementById("editName").value;
-    const address1 = document.getElementById("editAddress1").value;
-    const address2 = document.getElementById("editAddress2").value;
-    const city = document.getElementById("editCity").value;
-    const state = document.getElementById("editState").value;
-    const zipcode = document.getElementById("editZipcode").value;
 
-    const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
-    const userId = userInfo.id;
+  document.addEventListener("DOMContentLoaded", function () {
+    document
+    .getElementById("saveChangesButton")
+    .addEventListener("click", async function () {
+      const name = document.getElementById("editName").value;
+      const address1 = document.getElementById("editAddress1").value;
+      const address2 = document.getElementById("editAddress2").value;
+      const city = document.getElementById("editCity").value;
+      const state = document.getElementById("editState").value;
+      const zipcode = document.getElementById("editZipcode").value;
 
-    const updateUrl =
-      "https://4353.azurewebsites.net/api/api.php?action=update_user";
+      const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+      const userId = userInfo.id;
 
-    try {
-      const response = await fetch(updateUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: userId,
-          name: name,
-          address1: address1,
-          address2: address2,
-          city: city,
-          state: state,
-          zipcode: zipcode,
-        }),
-      });
-      const data = await response.json();
+      const updateUrl =
+        "https://4353.azurewebsites.net/api/api.php?action=update_user";
 
-      if (data.error) {
-        console.error("Update Error:", data.error);
-      } else {
-        sessionStorage.setItem("userInfo", JSON.stringify(data));
-        updateUserInterface();
-        $("#editUserModal").modal("hide");
+      try {
+        const response = await fetch(updateUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: userId,
+            name: name,
+            address1: address1,
+            address2: address2,
+            city: city,
+            state: state,
+            zipcode: zipcode,
+          }),
+        });
+        const data = await response.json();
+
+        if (data.error) {
+          console.error("Update Error:", data.error);
+        } else {
+          sessionStorage.setItem("userInfo", JSON.stringify(data));
+          updateUserInterface();
+          $("#editUserModal").modal("hide");
+        }
+      } catch (error) {
+        console.error("Error during update:", error);
       }
-    } catch (error) {
-      console.error("Error during update:", error);
-    }
+    });
   });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    console.log("DOM Loaded");
+    // Hardcoded values
+    var gallonsRequested = 100;
+    var deliveryAddress = "123 Main St";
+    var deliveryDate = "2024-03-20";
+    var suggestedPrice = "2.50";
+    var totalAmountDue = "250.00";
   
-  document.getElementById("fuelQuoteForm").addEventListener("submit", async function(event) {
-    event.preventDefault(); // Prevent the default form submission behavior
+    // Populate form fields with hardcoded values
+    console.log("Populating form fields...");
+    console.log("Gallons Requested:", gallonsRequested);
+    console.log("Delivery Address:", deliveryAddress);
+    console.log("Delivery Date:", deliveryDate);
+    console.log("Suggested Price:", suggestedPrice);
+    console.log("Total Amount Due:", totalAmountDue);
 
-    // Collect form data
-    const formData = {
+    // Populate form fields with hardcoded values
+    document.getElementById("gallonsRequested").value = gallonsRequested;
+    document.getElementById("deliveryAddress").value = deliveryAddress;
+    document.getElementById("deliveryDate").value = deliveryDate;
+    document.getElementById("suggestedPrice").value = suggestedPrice;
+    document.getElementById("totalAmountDue").value = totalAmountDue;
+
+    // Add event listener to handle form submission
+    document.getElementById("fuelQuoteForm").addEventListener("submit", async function(event) {
+      event.preventDefault(); // Prevent the default form submission behavior
+
+      // Collect form data
+      const formData = {
         gallonsRequested: document.getElementById("gallonsRequested").value,
         deliveryAddress: document.getElementById("deliveryAddress").value,
         deliveryDate: document.getElementById("deliveryDate").value,
         suggestedPrice: document.getElementById("suggestedPrice").value,
         totalAmountDue: document.getElementById("totalAmountDue").value,
-    };
+      };
 
-    // Specify backend endpoint for submitting the quote
-    const apiUrl = "https://4353.azurewebsites.net/api/api.php?action=submit_quote";
+      // Specify backend endpoint for submitting the quote
+      const apiUrl = "https://4353.azurewebsites.net/api/api.php?action=submit_quote";
 
-    // Send the form data to the backend using Fetch API
-    try {
+      // Send the form data to the backend using Fetch API
+      try {
         const response = await fetch(apiUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
         });
 
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+          throw new Error('Network response was not ok');
         }
 
         const data = await response.json();
@@ -227,51 +260,10 @@ document
         console.log("Quote submitted successfully:", data);
         // To be viewed on the HTML form (success)
         document.getElementById("formFeedback").innerHTML = "<strong>Success:</strong> Quote submitted successfully!";
-    } catch (error) {
-        console.error("Error submitting the quote:", error);
-        // To be viewed on the HTML form (error)
-        document.getElementById("formFeedback").innerHTML = `<strong>Error:</strong> ${error.message}`;
-    }
-});
-  document.getElementById("fuelQuoteForm").addEventListener("submit", async function(event) {
-    event.preventDefault(); // Prevent the default form submission behavior
-
-    // Collect form data
-    const formData = {
-        gallonsRequested: document.getElementById("gallonsRequested").value,
-        deliveryAddress: document.getElementById("deliveryAddress").value,
-        deliveryDate: document.getElementById("deliveryDate").value,
-        suggestedPrice: document.getElementById("suggestedPrice").value,
-        totalAmountDue: document.getElementById("totalAmountDue").value,
-    };
-
-    // Specify backend endpoint for submitting the quote
-    const apiUrl = "https://4353.azurewebsites.net/api/api.php?action=submit_quote";
-
-    // Send the form data to the backend using Fetch API
-    try {
-        const response = await fetch(apiUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-        });
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+      } catch (error) {
+          console.error("Error submitting the quote:", error);
+          // To be viewed on the HTML form (error)
+          document.getElementById("formFeedback").innerHTML = `<strong>Error:</strong> ${error.message}`;
         }
-
-        const data = await response.json();
-
-        //  displaying a success message
-        console.log("Quote submitted successfully:", data);
-        // To be viewed on the HTML form (success)
-        document.getElementById("formFeedback").innerHTML = "<strong>Success:</strong> Quote submitted successfully!";
-    } catch (error) {
-        console.error("Error submitting the quote:", error);
-        // To be viewed on the HTML form (error)
-        document.getElementById("formFeedback").innerHTML = `<strong>Error:</strong> ${error.message}`;
-    }
-});
-
+    });
+  });
