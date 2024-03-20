@@ -30,11 +30,15 @@ body {
 
 .about-us {
   position: absolute;
-  bottom: -75%;
+  bottom: -50%;
   left: 0;
   width: 100%;
   height: 200px;
   padding: 20px;
-  background: white;
+  background: aliceblue;
+  color: darkred;
+  font-size: medium;
+  font-family: 'Sen';
   z-index: -1;
 }
+
