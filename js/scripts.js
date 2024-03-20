@@ -178,3 +178,44 @@ document
       console.error("Error during update:", error);
     }
   });
+  document.getElementById("fuelQuoteForm").addEventListener("submit", async function(event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    // Collect form data
+    const formData = {
+        gallonsRequested: document.getElementById("gallonsRequested").value,
+        deliveryAddress: document.getElementById("deliveryAddress").value,
+        deliveryDate: document.getElementById("deliveryDate").value,
+        suggestedPrice: document.getElementById("suggestedPrice").value,
+        totalAmountDue: document.getElementById("totalAmountDue").value,
+    };
+
+    // Specify backend endpoint for submitting the quote
+    const apiUrl = "https://4353.azurewebsites.net/api/api.php?action=submit_quote";
+
+    // Send the form data to the backend using Fetch API
+    try {
+        const response = await fetch(apiUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+
+        //  displaying a success message
+        console.log("Quote submitted successfully:", data);
+        // To be viewed on the HTML form (success)
+        document.getElementById("formFeedback").innerHTML = "<strong>Success:</strong> Quote submitted successfully!";
+    } catch (error) {
+        console.error("Error submitting the quote:", error);
+        // To be viewed on the HTML form (error)
+        document.getElementById("formFeedback").innerHTML = `<strong>Error:</strong> ${error.message}`;
+    }
+});
