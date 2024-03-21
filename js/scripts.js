@@ -268,46 +268,43 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  document.addEventListener("DOMContentLoaded", function () {
-    console.log("DOM Loaded");
-  
-    // Hardcoded fuel history data
+document.addEventListener("DOMContentLoaded", function () {
+    populateFuelHistory(); // Call populateFuelHistory function on DOMContentLoaded
+});
+
+function populateFuelHistory() {
+    // Your hardcoded fuel history data
     const fuelHistoryData = [
-      {
-        gallonsRequested: 100,
-        deliveryAddress: "123 Main St",
-        deliveryDate: "2024-03-20",
-        pricePerGallon: 2.50,
-        totalAmountDue: 250.00,
-      },
-      {
-        gallonsRequested: 150,
-        deliveryAddress: "786 River Par St",
-        deliveryDate: "2024-02-13",
-        pricePerGallon: 2.25,
-        totalAmountDue: 337.50,
-      },
-      // Add more fuel history data as needed
+        {
+            gallonsRequested: 100,
+            deliveryAddress: "123 Main St",
+            deliveryDate: "2024-03-20",
+            pricePerGallon: 2.50,
+            totalAmountDue: 250.00,
+        },
+        {
+            gallonsRequested: 150,
+            deliveryAddress: "786 River Par St",
+            deliveryDate: "2024-02-13",
+            pricePerGallon: 2.25,
+            totalAmountDue: 337.50,
+        },
+        // Add more fuel history data as needed
     ];
-  
-    // Function to populate fuel history table with hardcoded data
-    function populateFuelHistory() {
-      const fuelHistoryTable = document.getElementById("fuelHistoryTableBody");
-  
-      fuelHistoryData.forEach((entry) => {
+
+    const fuelHistoryTable = document.getElementById("fuelQuoteTableBody");
+
+    fuelHistoryData.forEach((entry) => {
         const row = document.createElement("tr");
-  
+
         row.innerHTML = `
-          <td>${entry.gallonsRequested}</td>
-          <td>${entry.deliveryAddress}</td>
-          <td>${entry.deliveryDate}</td>
-          <td>$${entry.pricePerGallon.toFixed(2)}</td>
-          <td>$${entry.totalAmountDue.toFixed(2)}</td>
+            <td>${entry.gallonsRequested}</td>
+            <td>${entry.deliveryAddress}</td>
+            <td>${entry.deliveryDate}</td>
+            <td>$${entry.pricePerGallon.toFixed(2)}</td>
+            <td>$${entry.totalAmountDue.toFixed(2)}</td>
         `;
-  
+
         fuelHistoryTable.appendChild(row);
-      });
-    }
-    // Call the function to populate fuel history when DOM is loaded
-    populateFuelHistory();
-  });
+    });
+}
