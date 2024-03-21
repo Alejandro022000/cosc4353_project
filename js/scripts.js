@@ -268,7 +268,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("DOMContentLoaded", function () {
     populateFuelHistory(); // Call populateFuelHistory function on DOMContentLoaded
 });
 
@@ -294,6 +294,10 @@ function populateFuelHistory() {
 
     const fuelHistoryTable = document.getElementById("fuelQuoteTableBody");
 
+    // Clear existing content inside the tbody
+    fuelHistoryTable.innerHTML = '';
+
+    // Populate the table with data
     fuelHistoryData.forEach((entry) => {
         const row = document.createElement("tr");
 
