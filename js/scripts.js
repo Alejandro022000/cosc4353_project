@@ -269,72 +269,45 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   document.addEventListener("DOMContentLoaded", function () {
-    // Update user interface to display user information
-    updateUserInterface();
+    console.log("DOM Loaded");
   
-    // Display hardcoded fuel history values
-    const fuelHistory = [
-      { gallons: 100, deliveryDate: "2024-03-20", totalAmount: "250.00" },
-      { gallons: 150, deliveryDate: "2023-6-13", totalAmount: "375.00" },
-      { gallons: 165, deliveryDate: "2023-4-23", totalAmount: "412.50" }
-      // Add more entries as needed
+    // Hardcoded fuel history data
+    const fuelHistoryData = [
+      {
+        gallonsRequested: 100,
+        deliveryAddress: "123 Main St",
+        deliveryDate: "2024-03-20",
+        pricePerGallon: 2.50,
+        totalAmountDue: 250.00,
+      },
+      {
+        gallonsRequested: 150,
+        deliveryAddress: "786 River Par St",
+        deliveryDate: "2024-02-13",
+        pricePerGallon: 2.25,
+        totalAmountDue: 337.50,
+      },
+      // Add more fuel history data as needed
     ];
   
-    const fuelHistoryContainer = document.getElementById("fuelHistoryContainer");
+    // Function to populate fuel history table with hardcoded data
+    function populateFuelHistory() {
+      const fuelHistoryTable = document.getElementById("fuelHistoryTableBody");
   
-    fuelHistory.forEach((transaction, index) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${index + 1}</td>
-        <td>${transaction.gallons}</td>
-        <td>${transaction.deliveryDate}</td>
-        <td>${transaction.totalAmount}</td>
-      `;
-      fuelHistoryContainer.appendChild(row);
-    });
+      fuelHistoryData.forEach((entry) => {
+        const row = document.createElement("tr");
   
-    // Add event listener to handle form submission
-    document.getElementById("fuelQuoteForm").addEventListener("submit", async function(event) {
-      event.preventDefault(); // Prevent the default form submission behavior
+        row.innerHTML = `
+          <td>${entry.gallonsRequested}</td>
+          <td>${entry.deliveryAddress}</td>
+          <td>${entry.deliveryDate}</td>
+          <td>$${entry.pricePerGallon.toFixed(2)}</td>
+          <td>$${entry.totalAmountDue.toFixed(2)}</td>
+        `;
   
-      // Collect form data
-      const formData = {
-        gallonsRequested: document.getElementById("gallonsRequested").value,
-        deliveryAddress: document.getElementById("deliveryAddress").value,
-        deliveryDate: document.getElementById("deliveryDate").value,
-        suggestedPrice: document.getElementById("suggestedPrice").value,
-        totalAmountDue: document.getElementById("totalAmountDue").value,
-      };
-  
-      // Specify backend endpoint for submitting the quote
-      const apiUrl = "https://4353.azurewebsites.net/api/api.php?action=submit_quote";
-  
-      // Send the form data to the backend using Fetch API
-      try {
-        const response = await fetch(apiUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
-  
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-  
-        const data = await response.json();
-  
-        //  displaying a success message
-        console.log("Quote submitted successfully:", data);
-        // To be viewed on the HTML form (success)
-        document.getElementById("formFeedback").innerHTML = "<strong>Success:</strong> Quote submitted successfully!";
-      } catch (error) {
-          console.error("Error submitting the quote:", error);
-          // To be viewed on the HTML form (error)
-          document.getElementById("formFeedback").innerHTML = `<strong>Error:</strong> ${error.message}`;
-        }
-    });
+        fuelHistoryTable.appendChild(row);
+      });
+    }
+    // Call the function to populate fuel history when DOM is loaded
+    populateFuelHistory();
   });
-  
-
