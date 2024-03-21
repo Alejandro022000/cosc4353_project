@@ -224,6 +224,27 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("suggestedPrice").value = suggestedPrice;
     document.getElementById("totalAmountDue").value = totalAmountDue;
 
+    // Hardcoded values for fuel history
+    const fuelHistory = [
+      { gallons: 100, deliveryDate: "2024-03-20", totalAmount: "250.00" },
+      { gallons: 150, deliveryDate: "2023-6-13", totalAmount: "375.00" },
+      { gallons: 165, deliveryDate: "2023-4-23", totalAmount: "412.50" }
+      // Add more entries as needed
+    ];
+
+    // Display fuel history in a table or any desired format
+    const fuelHistoryContainer = document.getElementById("fuelHistoryContainer");
+
+    fuelHistory.forEach((transaction, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${transaction.gallons}</td>
+            <td>${transaction.deliveryDate}</td>
+            <td>${transaction.totalAmount}</td>
+        `;
+        fuelHistoryContainer.appendChild(row);
+    });
     // Add event listener to handle form submission
     document.getElementById("fuelQuoteForm").addEventListener("submit", async function(event) {
       event.preventDefault(); // Prevent the default form submission behavior
