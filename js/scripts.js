@@ -224,27 +224,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("suggestedPrice").value = suggestedPrice;
     document.getElementById("totalAmountDue").value = totalAmountDue;
 
-    // Hardcoded values for fuel history
-    const fuelHistory = [
-      { gallons: 100, deliveryDate: "2024-03-20", totalAmount: "250.00" },
-      { gallons: 150, deliveryDate: "2023-6-13", totalAmount: "375.00" },
-      { gallons: 165, deliveryDate: "2023-4-23", totalAmount: "412.50" }
-      // Add more entries as needed
-    ];
-
-    // Display fuel history in a table or any desired format
-    const fuelHistoryContainer = document.getElementById("fuelHistoryContainer");
-
-    fuelHistory.forEach((transaction, index) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${transaction.gallons}</td>
-            <td>${transaction.deliveryDate}</td>
-            <td>${transaction.totalAmount}</td>
-        `;
-        fuelHistoryContainer.appendChild(row);
-    });
     // Add event listener to handle form submission
     document.getElementById("fuelQuoteForm").addEventListener("submit", async function(event) {
       event.preventDefault(); // Prevent the default form submission behavior
@@ -288,3 +267,74 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
   });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // Update user interface to display user information
+    updateUserInterface();
+  
+    // Display hardcoded fuel history values
+    const fuelHistory = [
+      { gallons: 100, deliveryDate: "2024-03-20", totalAmount: "250.00" },
+      { gallons: 150, deliveryDate: "2023-6-13", totalAmount: "375.00" },
+      { gallons: 165, deliveryDate: "2023-4-23", totalAmount: "412.50" }
+      // Add more entries as needed
+    ];
+  
+    const fuelHistoryContainer = document.getElementById("fuelHistoryContainer");
+  
+    fuelHistory.forEach((transaction, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${transaction.gallons}</td>
+        <td>${transaction.deliveryDate}</td>
+        <td>${transaction.totalAmount}</td>
+      `;
+      fuelHistoryContainer.appendChild(row);
+    });
+  
+    // Add event listener to handle form submission
+    document.getElementById("fuelQuoteForm").addEventListener("submit", async function(event) {
+      event.preventDefault(); // Prevent the default form submission behavior
+  
+      // Collect form data
+      const formData = {
+        gallonsRequested: document.getElementById("gallonsRequested").value,
+        deliveryAddress: document.getElementById("deliveryAddress").value,
+        deliveryDate: document.getElementById("deliveryDate").value,
+        suggestedPrice: document.getElementById("suggestedPrice").value,
+        totalAmountDue: document.getElementById("totalAmountDue").value,
+      };
+  
+      // Specify backend endpoint for submitting the quote
+      const apiUrl = "https://4353.azurewebsites.net/api/api.php?action=submit_quote";
+  
+      // Send the form data to the backend using Fetch API
+      try {
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+  
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+  
+        const data = await response.json();
+  
+        //  displaying a success message
+        console.log("Quote submitted successfully:", data);
+        // To be viewed on the HTML form (success)
+        document.getElementById("formFeedback").innerHTML = "<strong>Success:</strong> Quote submitted successfully!";
+      } catch (error) {
+          console.error("Error submitting the quote:", error);
+          // To be viewed on the HTML form (error)
+          document.getElementById("formFeedback").innerHTML = `<strong>Error:</strong> ${error.message}`;
+        }
+    });
+  });
+  
+
