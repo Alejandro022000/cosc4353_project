@@ -1,3 +1,4 @@
+// jest.setup.js
 const { JSDOM } = require('jsdom');
 
 const dom = new JSDOM('<!doctype html><html><body><div id="signupForm"></div><div id="loginModal"></div></body></html>', {
