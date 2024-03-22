@@ -8,7 +8,8 @@ function updateUserInterface() {
     document.getElementById("navbarDropdown").textContent = userInfo.username; // Use username or name based on your session structure
 
     // Update the div with user information
-    document.getElementById("userInfoUsername").textContent += userInfo.username;
+    document.getElementById("userInfoUsername").textContent +=
+      userInfo.username;
     document.getElementById("userInfoDetails").innerHTML = `
       <strong>ID:</strong> ${userInfo.id}<br>
       <strong>Name:</strong> ${userInfo.name || "Not provided"}<br>
@@ -32,7 +33,6 @@ function updateUserInterface() {
 document.addEventListener("DOMContentLoaded", function () {
   updateUserInterface();
 });
-
 
 document
   .getElementById("signupForm")
@@ -90,7 +90,7 @@ document
     } catch (error) {
       console.error("Error during signup:", error);
     }
-});
+  });
 
 document
   .getElementById("loginModal")
@@ -126,7 +126,7 @@ document
     } catch (error) {
       console.error("Error during login:", error);
     }
-});
+  });
 
 document.addEventListener("DOMContentLoaded", function () {
   const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
@@ -152,8 +152,8 @@ document.addEventListener("DOMContentLoaded", function () {
   updateUserInterface();
 });
 
-  document.addEventListener("DOMContentLoaded", function () {
-    document
+document.addEventListener("DOMContentLoaded", function () {
+  document
     .getElementById("saveChangesButton")
     .addEventListener("click", async function () {
       const name = document.getElementById("editName").value;
@@ -198,34 +198,36 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Error during update:", error);
       }
     });
-  });
+});
 
-  document.addEventListener("DOMContentLoaded", function () {
-    console.log("DOM Loaded");
-    // Hardcoded values
-    var gallonsRequested = 100;
-    var deliveryAddress = "123 Main St";
-    var deliveryDate = "2024-03-20";
-    var suggestedPrice = "2.50";
-    var totalAmountDue = "250.00";
-  
-    // Populate form fields with hardcoded values
-    console.log("Populating form fields...");
-    console.log("Gallons Requested:", gallonsRequested);
-    console.log("Delivery Address:", deliveryAddress);
-    console.log("Delivery Date:", deliveryDate);
-    console.log("Suggested Price:", suggestedPrice);
-    console.log("Total Amount Due:", totalAmountDue);
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("DOM Loaded");
+  // Hardcoded values
+  var gallonsRequested = 100;
+  var deliveryAddress = "123 Main St";
+  var deliveryDate = "2024-03-20";
+  var suggestedPrice = "2.50";
+  var totalAmountDue = "250.00";
 
-    // Populate form fields with hardcoded values
-    document.getElementById("gallonsRequested").value = gallonsRequested;
-    document.getElementById("deliveryAddress").value = deliveryAddress;
-    document.getElementById("deliveryDate").value = deliveryDate;
-    document.getElementById("suggestedPrice").value = suggestedPrice;
-    document.getElementById("totalAmountDue").value = totalAmountDue;
+  // Populate form fields with hardcoded values
+  console.log("Populating form fields...");
+  console.log("Gallons Requested:", gallonsRequested);
+  console.log("Delivery Address:", deliveryAddress);
+  console.log("Delivery Date:", deliveryDate);
+  console.log("Suggested Price:", suggestedPrice);
+  console.log("Total Amount Due:", totalAmountDue);
 
-    // Add event listener to handle form submission
-    document.getElementById("fuelQuoteForm").addEventListener("submit", async function(event) {
+  // Populate form fields with hardcoded values
+  document.getElementById("gallonsRequested").value = gallonsRequested;
+  document.getElementById("deliveryAddress").value = deliveryAddress;
+  document.getElementById("deliveryDate").value = deliveryDate;
+  document.getElementById("suggestedPrice").value = suggestedPrice;
+  document.getElementById("totalAmountDue").value = totalAmountDue;
+
+  // Add event listener to handle form submission
+  document
+    .getElementById("fuelQuoteForm")
+    .addEventListener("submit", async function (event) {
       event.preventDefault(); // Prevent the default form submission behavior
 
       // Collect form data
@@ -237,71 +239,45 @@ document.addEventListener("DOMContentLoaded", function () {
         totalAmountDue: document.getElementById("totalAmountDue").value,
       };
 
-      // Specify backend endpoint for submitting the quote
-      const apiUrl = "https://4353.azurewebsites.net/api/api.php?action=submit_quote";
-
-      // Send the form data to the backend using Fetch API
-      try {
-        const response = await fetch(apiUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const data = await response.json();
-
-        //  displaying a success message
-        console.log("Quote submitted successfully:", data);
-        // To be viewed on the HTML form (success)
-        document.getElementById("formFeedback").innerHTML = "<strong>Success:</strong> Quote submitted successfully!";
-      } catch (error) {
-          console.error("Error submitting the quote:", error);
-          // To be viewed on the HTML form (error)
-          document.getElementById("formFeedback").innerHTML = `<strong>Error:</strong> ${error.message}`;
-        }
+      // Call the handleFormSubmit function with the form data
+      await handleFormSubmit(formData);
     });
-  });
+});
 
-  document.addEventListener("DOMContentLoaded", function () {
-    populateFuelHistory(); // Call populateFuelHistory function on DOMContentLoaded
+document.addEventListener("DOMContentLoaded", function () {
+  populateFuelHistory(); // Call populateFuelHistory function on DOMContentLoaded
 });
 
 function populateFuelHistory() {
-    // Your hardcoded fuel history data
-    const fuelHistoryData = [
-        {
-            gallonsRequested: 100,
-            deliveryAddress: "123 Main St",
-            deliveryDate: "2024-03-20",
-            pricePerGallon: 2.50,
-            totalAmountDue: 250.00,
-        },
-        {
-            gallonsRequested: 150,
-            deliveryAddress: "786 River Par St",
-            deliveryDate: "2024-02-13",
-            pricePerGallon: 2.25,
-            totalAmountDue: 337.50,
-        },
-        // Add more fuel history data as needed
-    ];
+  // Your hardcoded fuel history data
+  const fuelHistoryData = [
+    {
+      gallonsRequested: 100,
+      deliveryAddress: "123 Main St",
+      deliveryDate: "2024-03-20",
+      pricePerGallon: 2.5,
+      totalAmountDue: 250.0,
+    },
+    {
+      gallonsRequested: 150,
+      deliveryAddress: "786 River Par St",
+      deliveryDate: "2024-02-13",
+      pricePerGallon: 2.25,
+      totalAmountDue: 337.5,
+    },
+    // Add more fuel history data as needed
+  ];
 
-    const fuelHistoryTable = document.getElementById("fuelQuoteTableBody");
+  const fuelHistoryTable = document.getElementById("fuelQuoteTableBody");
 
-    // Clear existing content inside the tbody
-    fuelHistoryTable.innerHTML = '';
+  // Clear existing content inside the tbody
+  fuelHistoryTable.innerHTML = "";
 
-    // Populate the table with data
-    fuelHistoryData.forEach((entry) => {
-        const row = document.createElement("tr");
+  // Populate the table with data
+  fuelHistoryData.forEach((entry) => {
+    const row = document.createElement("tr");
 
-        row.innerHTML = `
+    row.innerHTML = `
             <td>${entry.gallonsRequested}</td>
             <td>${entry.deliveryAddress}</td>
             <td>${entry.deliveryDate}</td>
@@ -309,6 +285,34 @@ function populateFuelHistory() {
             <td>$${entry.totalAmountDue.toFixed(2)}</td>
         `;
 
-        fuelHistoryTable.appendChild(row);
-    });
+    fuelHistoryTable.appendChild(row);
+  });
 }
+async function handleFormSubmit(formData) {
+  const apiUrl =
+    "https://4353.azurewebsites.net/api/api.php?action=submit_quote";
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+    document.getElementById("formFeedback").innerHTML =
+      "<strong>Success:</strong> Quote submitted successfully!";
+  } catch (error) {
+    console.error("Error submitting the quote:", error);
+    document.getElementById(
+      "formFeedback"
+    ).innerHTML = `<strong>Error:</strong> ${error.message}`;
+  }
+}
+module.exports = { handleFormSubmit };
