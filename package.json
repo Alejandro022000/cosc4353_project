@@ -5,6 +5,9 @@
     "jest-fetch-mock": "^3.0.3",
     "jsdom": "^24.0.0"
   },
+  "scripts": {
+    "test": "jest --coverage"
+  },
   "jest": {
     "setupFiles": [
       "<rootDir>/jest.setup.js"
