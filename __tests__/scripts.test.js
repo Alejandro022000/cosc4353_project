@@ -91,7 +91,6 @@ describe("updateUserInterface", () => {
   let originalDocument;
 
   beforeEach(() => {
-    // Store the original sessionStorage and document objects
     originalSessionStorage = global.sessionStorage;
     originalDocument = global.document;
 
@@ -125,18 +124,17 @@ describe("updateUserInterface", () => {
       zipcode: "12345",
     };
 
-    // Mock sessionStorage getItem method to return user information
     global.sessionStorage.getItem.mockReturnValueOnce(JSON.stringify(userInfo));
 
     // Mock document.getElementById method to return elements
     global.document.getElementById.mockReturnValueOnce({ style: { display: "" } });
-    global.document.getElementById.mockReturnValueOnce({ style: { display: "" } });
-    global.document.getElementById.mockReturnValueOnce({ textContent: "" });
+    global.document.getElementById.mockReturnValueOnce({ style: { display: "" } }); 
+    global.document.getElementById.mockReturnValueOnce({ style: { display: "" } }); 
+    global.document.getElementById.mockReturnValueOnce({ textContent: "" }); 
     global.document.getElementById.mockReturnValueOnce({ textContent: "" });
     global.document.getElementById.mockReturnValueOnce({ innerHTML: "" });
     global.document.getElementById.mockReturnValueOnce({ style: { display: "" } }); 
 
-    // Call updateUserInterface
     updateUserInterface();
 
     // Check if the DOM elements are handled as expected
@@ -159,10 +157,8 @@ describe("updateUserInterface", () => {
     global.document.getElementById.mockReturnValueOnce({ style: { display: "" } }); // Mocking signupNavItem
     global.document.getElementById.mockReturnValueOnce({ style: { display: "" } }); // Mocking userInfoDropdown
 
-    // Call updateUserInterface
     updateUserInterface();
 
-    // Check if the DOM elements are manipulated as expected
     expect(global.document.getElementById).toHaveBeenCalledTimes(3);
     expect(global.document.getElementById).toHaveBeenCalledWith("loginNavItem");
     expect(global.document.getElementById).toHaveBeenCalledWith("signupNavItem");
