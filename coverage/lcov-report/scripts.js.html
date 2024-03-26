@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">13.17% </span>
+                <span class="strong">22.48% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>17/129</span>
+                <span class='fraction'>29/129</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">3.57% </span>
+                <span class="strong">35.71% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/28</span>
+                <span class='fraction'>10/28</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">6.66% </span>
+                <span class="strong">13.33% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/15</span>
+                <span class='fraction'>2/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">13.17% </span>
+                <span class="strong">22.48% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>17/129</span>
+                <span class='fraction'>29/129</span>
             </div>
         
             
@@ -382,20 +382,18 @@
 <a name='L317'></a><a href='#L317'>317</a>
 <a name='L318'></a><a href='#L318'>318</a>
 <a name='L319'></a><a href='#L319'>319</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -404,12 +402,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -699,35 +699,35 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">function <span class="fstat-no" title="function not covered" >updateUserInterface(</span>) {
-  const userInfo = <span class="cstat-no" title="statement not covered" >JSON.parse(sessionStorage.getItem("userInfo"));</span>
-<span class="cstat-no" title="statement not covered" >  if (userInfo) {</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">function updateUserInterface() {
+  const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+  if (userInfo) {
     // Hide Login/Signup and Show User Info Dropdown
-<span class="cstat-no" title="statement not covered" >    document.getElementById("loginNavItem").style.display = "none";</span>
-<span class="cstat-no" title="statement not covered" >    document.getElementById("signupNavItem").style.display = "none";</span>
-<span class="cstat-no" title="statement not covered" >    document.getElementById("userInfoDropdown").style.display = "block";</span>
-<span class="cstat-no" title="statement not covered" >    document.getElementById("navbarDropdown").textContent = userInfo.username; </span>// Use username or name based on your session structure
+    document.getElementById("loginNavItem").style.display = "none";
+    document.getElementById("signupNavItem").style.display = "none";
+    document.getElementById("userInfoDropdown").style.display = "block";
+    document.getElementById("navbarDropdown").textContent = userInfo.username; // Use username or name based on your session structure
 &nbsp;
     // Update the div with user information
-<span class="cstat-no" title="statement not covered" >    document.getElementById("userInfoUsername").textContent +=</span>
+    document.getElementById("userInfoUsername").textContent +=
       userInfo.username;
-<span class="cstat-no" title="statement not covered" >    document.getElementById("userInfoDetails").innerHTML = `</span>
+    document.getElementById("userInfoDetails").innerHTML = `
       &lt;strong&gt;ID:&lt;/strong&gt; ${userInfo.id}&lt;br&gt;
-      &lt;strong&gt;Name:&lt;/strong&gt; ${userInfo.name || "Not provided"}&lt;br&gt;
-      &lt;strong&gt;Address 1:&lt;/strong&gt; ${userInfo.address1 || "Not provided"}&lt;br&gt;
+      &lt;strong&gt;Name:&lt;/strong&gt; ${userInfo.name || <span class="branch-1 cbranch-no" title="branch not covered" >"Not provided"}</span>&lt;br&gt;
+      &lt;strong&gt;Address 1:&lt;/strong&gt; ${userInfo.address1 || <span class="branch-1 cbranch-no" title="branch not covered" >"Not provided"}</span>&lt;br&gt;
       &lt;strong&gt;Address 2:&lt;/strong&gt; ${userInfo.address2 || "Not provided"}&lt;br&gt;
-      &lt;strong&gt;City:&lt;/strong&gt; ${userInfo.city || "Not provided"}
-      &lt;strong&gt;State:&lt;/strong&gt; ${userInfo.state || "Not provided"}
-      &lt;strong&gt;Zipcode:&lt;/strong&gt; ${userInfo.zipcode || "Not provided"}
+      &lt;strong&gt;City:&lt;/strong&gt; ${userInfo.city || <span class="branch-1 cbranch-no" title="branch not covered" >"Not provided"}</span>
+      &lt;strong&gt;State:&lt;/strong&gt; ${userInfo.state || <span class="branch-1 cbranch-no" title="branch not covered" >"Not provided"}</span>
+      &lt;strong&gt;Zipcode:&lt;/strong&gt; ${userInfo.zipcode || <span class="branch-1 cbranch-no" title="branch not covered" >"Not provided"}</span>
     `;
 &nbsp;
     // Show the user info container
-<span class="cstat-no" title="statement not covered" >    document.getElementById("userInfoContainer").style.display = "block";</span>
+    document.getElementById("userInfoContainer").style.display = "block";
   } else {
     // Show Login/Signup and Hide User Info Dropdown
-<span class="cstat-no" title="statement not covered" >    document.getElementById("loginNavItem").style.display = "block";</span>
-<span class="cstat-no" title="statement not covered" >    document.getElementById("signupNavItem").style.display = "block";</span>
-<span class="cstat-no" title="statement not covered" >    document.getElementById("userInfoDropdown").style.display = "none";</span>
+    document.getElementById("loginNavItem").style.display = "block";
+    document.getElementById("signupNavItem").style.display = "block";
+    document.getElementById("userInfoDropdown").style.display = "none";
   }
 }
 &nbsp;
@@ -1016,7 +1016,7 @@ async function handleFormSubmit(formData) {
     ).innerHTML = `&lt;strong&gt;Error:&lt;/strong&gt; ${error.message}`;
   }
 }
-module.exports = { handleFormSubmit };
+module.exports = { handleFormSubmit, updateUserInterface };
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -1024,7 +1024,7 @@ module.exports = { handleFormSubmit };
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-03-24T17:12:17.922Z
+                at 2024-03-26T04:53:17.816Z
             </div>
         <script src="prettify.js"></script>
         <script>

@@ -8,11 +8,12 @@ const {
   afterEach,
 } = require("@jest/globals");
 
-// Mocking the fetch API
-fetchMock.enableMocks();
-
 // Import the JavaScript code you want to test
 const { handleFormSubmit } = require("../js/scripts.js");
+const { updateUserInterface } = require("../js/scripts.js"); // Importing updateUserInterface
+
+// Mocking the fetch API
+fetchMock.enableMocks();
 
 // Mock the document.getElementById function
 const mockElement = { innerHTML: "" };
@@ -81,5 +82,90 @@ describe("handleFormSubmit", () => {
 
     // Check if error message is displayed
     expect(mockElement.innerHTML).toBe("<strong>Error:</strong> Network error");
+  });
+});
+
+// describe code for updateUserInterface tests
+describe("updateUserInterface", () => {
+  let originalSessionStorage;
+  let originalDocument;
+
+  beforeEach(() => {
+    // Store the original sessionStorage and document objects
+    originalSessionStorage = global.sessionStorage;
+    originalDocument = global.document;
+
+    // Mock sessionStorage
+    global.sessionStorage = {
+      getItem: jest.fn(),
+    };
+
+    // Mock document
+    global.document = {
+      getElementById: jest.fn(),
+    };
+  });
+
+  afterEach(() => {
+    // Restore the original sessionStorage and document objects
+    global.sessionStorage = originalSessionStorage;
+    global.document = originalDocument;
+  });
+
+  it("should update the user interface when user information is available", () => {
+    // Mock user information
+    const userInfo = {
+      username: "testuser",
+      id: "123",
+      name: "Test User",
+      address1: "123 Main St",
+      address2: "",
+      city: "Test City",
+      state: "Test State",
+      zipcode: "12345",
+    };
+
+    // Mock sessionStorage getItem method to return user information
+    global.sessionStorage.getItem.mockReturnValueOnce(JSON.stringify(userInfo));
+
+    // Mock document.getElementById method to return elements
+    global.document.getElementById.mockReturnValueOnce({ style: { display: "" } });
+    global.document.getElementById.mockReturnValueOnce({ style: { display: "" } });
+    global.document.getElementById.mockReturnValueOnce({ textContent: "" });
+    global.document.getElementById.mockReturnValueOnce({ textContent: "" });
+    global.document.getElementById.mockReturnValueOnce({ innerHTML: "" });
+    global.document.getElementById.mockReturnValueOnce({ style: { display: "" } }); 
+
+    // Call updateUserInterface
+    updateUserInterface();
+
+    // Check if the DOM elements are handled as expected
+    expect(global.document.getElementById).toHaveBeenCalledTimes(7);
+    expect(global.document.getElementById).toHaveBeenCalledWith("loginNavItem");
+    expect(global.document.getElementById).toHaveBeenCalledWith("signupNavItem");
+    expect(global.document.getElementById).toHaveBeenCalledWith("userInfoDropdown");
+    expect(global.document.getElementById).toHaveBeenCalledWith("navbarDropdown");
+    expect(global.document.getElementById).toHaveBeenCalledWith("userInfoUsername");
+    expect(global.document.getElementById).toHaveBeenCalledWith("userInfoDetails");
+    expect(global.document.getElementById).toHaveBeenCalledWith("userInfoContainer");
+  });
+
+  it("should update the user interface when user information is not available", () => {
+    // Mock sessionStorage getItem method to return null (no user information)
+    global.sessionStorage.getItem.mockReturnValueOnce(null);
+
+    // Mock document.getElementById method to return elements
+    global.document.getElementById.mockReturnValueOnce({ style: { display: "" } }); // Mocking loginNavItem
+    global.document.getElementById.mockReturnValueOnce({ style: { display: "" } }); // Mocking signupNavItem
+    global.document.getElementById.mockReturnValueOnce({ style: { display: "" } }); // Mocking userInfoDropdown
+
+    // Call updateUserInterface
+    updateUserInterface();
+
+    // Check if the DOM elements are manipulated as expected
+    expect(global.document.getElementById).toHaveBeenCalledTimes(3);
+    expect(global.document.getElementById).toHaveBeenCalledWith("loginNavItem");
+    expect(global.document.getElementById).toHaveBeenCalledWith("signupNavItem");
+    expect(global.document.getElementById).toHaveBeenCalledWith("userInfoDropdown");
   });
 });

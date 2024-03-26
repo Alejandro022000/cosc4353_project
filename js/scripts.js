@@ -315,4 +315,4 @@ async function handleFormSubmit(formData) {
     ).innerHTML = `<strong>Error:</strong> ${error.message}`;
   }
 }
-module.exports = { handleFormSubmit };
+module.exports = { handleFormSubmit, updateUserInterface };
