@@ -265,7 +265,13 @@ function populateFuelHistory() {
       pricePerGallon: 2.25,
       totalAmountDue: 337.5,
     },
-    // Add more fuel history data as needed
+    {
+      gallonsRequested: 235,
+      deliveryAddress: "110 Farms to Market Rd",
+      deliveryDate: "2023-09-30",
+      pricePerGallon: 2.10,
+      totalAmountDue: 493.5,
+    }
   ];
 
   const fuelHistoryTable = document.getElementById("fuelQuoteTableBody");
