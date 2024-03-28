@@ -9,8 +9,7 @@ const {
 } = require("@jest/globals");
 
 // Import the JavaScript code you want to test
-const { handleFormSubmit } = require("../js/scripts.js");
-const { updateUserInterface } = require("../js/scripts.js"); // Importing updateUserInterface
+const { handleFormSubmit, updateUserInterface, populateFuelHistory } = require("../js/scripts.js");
 
 // Mocking the fetch API
 fetchMock.enableMocks();
@@ -27,7 +26,7 @@ document.getElementById = jest.fn().mockImplementation((id) => {
 describe("handleFormSubmit", () => {
   beforeEach(() => {
     fetchMock.resetMocks();
-    mockElement.innerHTML = ""; // Reset the innerHTML for each test
+    mockElement.innerHTML = ""; 
   });
 
   it("should submit the form data to the backend and display success message on successful response", async () => {
@@ -163,5 +162,59 @@ describe("updateUserInterface", () => {
     expect(global.document.getElementById).toHaveBeenCalledWith("loginNavItem");
     expect(global.document.getElementById).toHaveBeenCalledWith("signupNavItem");
     expect(global.document.getElementById).toHaveBeenCalledWith("userInfoDropdown");
+  });
+});
+
+describe("populateFuelHistory", () => {
+  let originalDocument;
+
+  beforeEach(() => {
+    originalDocument = global.document;
+
+    global.document = {
+      getElementById: jest.fn(),
+      createElement: jest.fn(() => ({ innerHTML: "" })),
+    };
+  });
+
+  afterEach(() => {
+    global.document = originalDocument;
+  });
+
+  it("should populate the fuel history table with provided data", () => {
+    // Mock fuel history data
+    const fuelHistoryData = [
+      {
+        gallonsRequested: 100,
+        deliveryAddress: "123 Main St",
+        deliveryDate: "2024-03-20",
+        pricePerGallon: 2.5,
+        totalAmountDue: 250.0,
+      },
+      {
+        gallonsRequested: 150,
+        deliveryAddress: "786 River Par St",
+        deliveryDate: "2024-02-13",
+        pricePerGallon: 2.25,
+        totalAmountDue: 337.5,
+      },
+    ];
+
+    // Mock document.getElementById method to return fuel history table
+    const appendChildMock = jest.fn(); // Mock appendChild method
+    global.document.getElementById.mockReturnValueOnce({
+      appendChild: appendChildMock,
+    });
+
+    populateFuelHistory();
+
+    // Check if the table rows are added correctly
+    expect(global.document.getElementById).toHaveBeenCalledWith("fuelQuoteTableBody");
+    expect(global.document.createElement).toHaveBeenCalledTimes(2);
+
+    // Mock appendChild method to verify the argument
+    expect(appendChildMock).toHaveBeenCalledTimes(2);
+    expect(appendChildMock).toHaveBeenCalledWith(expect.any(Object));
+    expect(appendChildMock).toHaveBeenCalledWith(expect.any(Object));
   });
 });
