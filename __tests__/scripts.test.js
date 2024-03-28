@@ -82,6 +82,46 @@ describe("handleFormSubmit", () => {
     // Check if error message is displayed
     expect(mockElement.innerHTML).toBe("<strong>Error:</strong> Network error");
   });
+
+  it("should handle server error and display error message", async () => {
+    // Mock form data
+    const formData = {
+      gallonsRequested: "100",
+      deliveryAddress: "123 Main St",
+      deliveryDate: "2024-03-20",
+      suggestedPrice: "2.50",
+      totalAmountDue: "250.00",
+    };
+
+    // Mock server error response
+    fetchMock.mockResponseOnce(JSON.stringify({ error: "Network response was not ok" }), { status: 500 });
+
+    // Trigger the form submission
+    await handleFormSubmit(formData);
+
+    // Check if error message is displayed
+    expect(mockElement.innerHTML).toBe("<strong>Error:</strong> Network response was not ok");
+  });
+
+  it("should handle network error and display error message", async () => {
+    // Mock form data
+    const formData = {
+      gallonsRequested: "100",
+      deliveryAddress: "123 Main St",
+      deliveryDate: "2024-03-20",
+      suggestedPrice: "2.50",
+      totalAmountDue: "250.00",
+    };
+
+    // Mock network error response
+    fetchMock.mockRejectOnce(new Error("Network error occurred"));
+
+    // Trigger the form submission
+    await handleFormSubmit(formData);
+
+    // Check if error message is displayed
+    expect(mockElement.innerHTML).toBe("<strong>Error:</strong> Network error occurred");
+  });
 });
 
 // describe code for updateUserInterface tests
@@ -217,4 +257,6 @@ describe("populateFuelHistory", () => {
     expect(appendChildMock).toHaveBeenCalledWith(expect.any(Object));
     expect(appendChildMock).toHaveBeenCalledWith(expect.any(Object));
   });
+
+  
 });
