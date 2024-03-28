@@ -210,10 +210,10 @@ describe("populateFuelHistory", () => {
 
     // Check if the table rows are added correctly
     expect(global.document.getElementById).toHaveBeenCalledWith("fuelQuoteTableBody");
-    expect(global.document.createElement).toHaveBeenCalledTimes(2);
+    expect(global.document.createElement).toHaveBeenCalledTimes(3);
 
     // Mock appendChild method to verify the argument
-    expect(appendChildMock).toHaveBeenCalledTimes(2);
+    expect(appendChildMock).toHaveBeenCalledTimes(3);
     expect(appendChildMock).toHaveBeenCalledWith(expect.any(Object));
     expect(appendChildMock).toHaveBeenCalledWith(expect.any(Object));
   });
