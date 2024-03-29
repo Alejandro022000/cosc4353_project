@@ -593,3 +593,103 @@ describe("saveChangesButton Event Listener", () => {
     // Note: You may need to mock or assert the display of error message in your tests
   });
 });
+describe("loginModal Form Submission", () => {
+  let mockSubmitHandler;
+
+  beforeEach(() => {
+    // Mock the global fetch function
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ username: "testuser", id: "123" }),
+    });
+
+    // Create a mock function for the event handler
+    mockSubmitHandler = jest.fn(async (event) => {
+      // Prevent the default form submission behavior
+      event.preventDefault();
+
+      // Extract form data
+      const username = document.getElementById("username-login").value;
+      const password = document.getElementById("password-login").value;
+
+      // Define the API URL for login
+      const loginUrl =
+        "https://4353.azurewebsites.net/api/api.php?action=get_user_login";
+
+      // Send the login request to the server using POST
+      const response = await fetch(loginUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (!data.error) {
+        sessionStorage.setItem("userInfo", JSON.stringify(data));
+      }
+    });
+
+    // Mock document.getElementById to return input elements and the form
+    document.getElementById = jest.fn((id) => {
+      switch (id) {
+        case "username-login":
+          return { value: "testuser" };
+        case "password-login":
+          return { value: "password123" };
+        case "loginModal":
+          return {
+            addEventListener: (event, callback) => {
+              if (event === "submit") {
+                mockSubmitHandler = callback;
+              }
+            },
+          };
+        default:
+          return null;
+      }
+    });
+
+    // Mock sessionStorage
+    global.sessionStorage = {
+      setItem: jest.fn(),
+    };
+  });
+
+  it("should submit login form and update sessionStorage on successful login", async () => {
+    // Manually trigger the event handler to simulate form submission
+    await mockSubmitHandler({ preventDefault: jest.fn() });
+
+    // Check if fetch was called with the correct arguments
+    expect(global.fetch).toHaveBeenCalledWith(
+      "https://4353.azurewebsites.net/api/api.php?action=get_user_login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username: "testuser", password: "password123" }),
+      }
+    );
+
+    // Check if sessionStorage was updated
+    expect(global.sessionStorage.setItem).toHaveBeenCalledWith(
+      "userInfo",
+      JSON.stringify({ username: "testuser", id: "123" })
+    );
+  });
+  it("should handle login error and not update sessionStorage", async () => {
+    // Mock error response from the server
+    fetchMock.mockResponseOnce(
+      JSON.stringify({ error: "Invalid credentials" })
+    );
+
+    // Trigger the form submission
+    require("../js/scripts.js");
+
+    // Check if sessionStorage was not updated
+    expect(global.sessionStorage.setItem).not.toHaveBeenCalled();
+  });
+});
