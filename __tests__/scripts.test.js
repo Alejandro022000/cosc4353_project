@@ -693,3 +693,44 @@ describe("loginModal Form Submission", () => {
     expect(global.sessionStorage.setItem).not.toHaveBeenCalled();
   });
 });
+describe("signupForm Form Submission", () => {
+  beforeEach(() => {
+    fetchMock.resetMocks();
+
+    // Mock document.getElementById to return input elements and the form
+    document.getElementById = jest.fn((id) => {
+      switch (id) {
+        case "password-signup":
+          return { value: "password123" };
+        case "password-confirm":
+          return { value: "password123" }; // Matching password for confirmation
+        case "username-signup":
+          return { value: "newuser" };
+        case "passwordError":
+          return { style: { display: "none" } };
+        case "signupError":
+          return { style: { display: "none" }, innerHTML: "" };
+        case "signupForm":
+          return {
+            addEventListener: jest.fn((event, callback) => {
+              if (event === "submit") {
+                callback({ preventDefault: jest.fn() }); // Simulate form submission
+              }
+            }),
+          };
+        default:
+          return null;
+      }
+    });
+  });
+
+  it("should display error message on failed signup", async () => {
+    // Mock error response from the server
+    fetchMock.mockResponseOnce(
+      JSON.stringify({ error: "Username already exists" })
+    );
+
+    // Trigger the form submission
+    require("../js/scripts.js");
+  });
+});
