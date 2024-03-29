@@ -9,7 +9,11 @@ const {
 } = require("@jest/globals");
 
 // Import the JavaScript code you want to test
-const { handleFormSubmit, updateUserInterface, populateFuelHistory } = require("../js/scripts.js");
+const {
+  handleFormSubmit,
+  updateUserInterface,
+  populateFuelHistory,
+} = require("../js/scripts.js");
 
 // Mocking the fetch API
 fetchMock.enableMocks();
@@ -26,11 +30,8 @@ document.getElementById = jest.fn().mockImplementation((id) => {
 describe("handleFormSubmit", () => {
   beforeEach(() => {
     fetchMock.resetMocks();
-    mockElement.innerHTML = ""; 
+    mockElement.innerHTML = "";
   });
-  
-
-  
 
   it("should submit the form data to the backend and display success message on successful response", async () => {
     // Mock form data
@@ -97,13 +98,18 @@ describe("handleFormSubmit", () => {
     };
 
     // Mock server error response
-    fetchMock.mockResponseOnce(JSON.stringify({ error: "Network response was not ok" }), { status: 500 });
+    fetchMock.mockResponseOnce(
+      JSON.stringify({ error: "Network response was not ok" }),
+      { status: 500 }
+    );
 
     // Trigger the form submission
     await handleFormSubmit(formData);
 
     // Check if error message is displayed
-    expect(mockElement.innerHTML).toBe("<strong>Error:</strong> Network response was not ok");
+    expect(mockElement.innerHTML).toBe(
+      "<strong>Error:</strong> Network response was not ok"
+    );
   });
 
   it("should handle network error and display error message", async () => {
@@ -123,10 +129,10 @@ describe("handleFormSubmit", () => {
     await handleFormSubmit(formData);
 
     // Check if error message is displayed
-    expect(mockElement.innerHTML).toBe("<strong>Error:</strong> Network error occurred");
+    expect(mockElement.innerHTML).toBe(
+      "<strong>Error:</strong> Network error occurred"
+    );
   });
-
-  
 });
 
 // describe code for updateUserInterface tests
@@ -171,25 +177,45 @@ describe("updateUserInterface", () => {
     global.sessionStorage.getItem.mockReturnValueOnce(JSON.stringify(userInfo));
 
     // Mock document.getElementById method to return elements
-    global.document.getElementById.mockReturnValueOnce({ style: { display: "" } });
-    global.document.getElementById.mockReturnValueOnce({ style: { display: "" } }); 
-    global.document.getElementById.mockReturnValueOnce({ style: { display: "" } }); 
-    global.document.getElementById.mockReturnValueOnce({ textContent: "" }); 
+    global.document.getElementById.mockReturnValueOnce({
+      style: { display: "" },
+    });
+    global.document.getElementById.mockReturnValueOnce({
+      style: { display: "" },
+    });
+    global.document.getElementById.mockReturnValueOnce({
+      style: { display: "" },
+    });
+    global.document.getElementById.mockReturnValueOnce({ textContent: "" });
     global.document.getElementById.mockReturnValueOnce({ textContent: "" });
     global.document.getElementById.mockReturnValueOnce({ innerHTML: "" });
-    global.document.getElementById.mockReturnValueOnce({ style: { display: "" } }); 
+    global.document.getElementById.mockReturnValueOnce({
+      style: { display: "" },
+    });
 
     updateUserInterface();
 
     // Check if the DOM elements are handled as expected
     expect(global.document.getElementById).toHaveBeenCalledTimes(7);
     expect(global.document.getElementById).toHaveBeenCalledWith("loginNavItem");
-    expect(global.document.getElementById).toHaveBeenCalledWith("signupNavItem");
-    expect(global.document.getElementById).toHaveBeenCalledWith("userInfoDropdown");
-    expect(global.document.getElementById).toHaveBeenCalledWith("navbarDropdown");
-    expect(global.document.getElementById).toHaveBeenCalledWith("userInfoUsername");
-    expect(global.document.getElementById).toHaveBeenCalledWith("userInfoDetails");
-    expect(global.document.getElementById).toHaveBeenCalledWith("userInfoContainer");
+    expect(global.document.getElementById).toHaveBeenCalledWith(
+      "signupNavItem"
+    );
+    expect(global.document.getElementById).toHaveBeenCalledWith(
+      "userInfoDropdown"
+    );
+    expect(global.document.getElementById).toHaveBeenCalledWith(
+      "navbarDropdown"
+    );
+    expect(global.document.getElementById).toHaveBeenCalledWith(
+      "userInfoUsername"
+    );
+    expect(global.document.getElementById).toHaveBeenCalledWith(
+      "userInfoDetails"
+    );
+    expect(global.document.getElementById).toHaveBeenCalledWith(
+      "userInfoContainer"
+    );
   });
 
   it("should update the user interface when user information is not available", () => {
@@ -197,16 +223,26 @@ describe("updateUserInterface", () => {
     global.sessionStorage.getItem.mockReturnValueOnce(null);
 
     // Mock document.getElementById method to return elements
-    global.document.getElementById.mockReturnValueOnce({ style: { display: "" } }); // Mocking loginNavItem
-    global.document.getElementById.mockReturnValueOnce({ style: { display: "" } }); // Mocking signupNavItem
-    global.document.getElementById.mockReturnValueOnce({ style: { display: "" } }); // Mocking userInfoDropdown
+    global.document.getElementById.mockReturnValueOnce({
+      style: { display: "" },
+    }); // Mocking loginNavItem
+    global.document.getElementById.mockReturnValueOnce({
+      style: { display: "" },
+    }); // Mocking signupNavItem
+    global.document.getElementById.mockReturnValueOnce({
+      style: { display: "" },
+    }); // Mocking userInfoDropdown
 
     updateUserInterface();
 
     expect(global.document.getElementById).toHaveBeenCalledTimes(3);
     expect(global.document.getElementById).toHaveBeenCalledWith("loginNavItem");
-    expect(global.document.getElementById).toHaveBeenCalledWith("signupNavItem");
-    expect(global.document.getElementById).toHaveBeenCalledWith("userInfoDropdown");
+    expect(global.document.getElementById).toHaveBeenCalledWith(
+      "signupNavItem"
+    );
+    expect(global.document.getElementById).toHaveBeenCalledWith(
+      "userInfoDropdown"
+    );
   });
 });
 
@@ -225,8 +261,6 @@ describe("populateFuelHistory", () => {
   afterEach(() => {
     global.document = originalDocument;
   });
-
-  
 
   it("should populate the fuel history table with provided data", () => {
     // Mock fuel history data
@@ -256,7 +290,9 @@ describe("populateFuelHistory", () => {
     populateFuelHistory();
 
     // Check if the table rows are added correctly
-    expect(global.document.getElementById).toHaveBeenCalledWith("fuelQuoteTableBody");
+    expect(global.document.getElementById).toHaveBeenCalledWith(
+      "fuelQuoteTableBody"
+    );
     expect(global.document.createElement).toHaveBeenCalledTimes(3);
 
     // Mock appendChild method to verify the argument
@@ -264,10 +300,7 @@ describe("populateFuelHistory", () => {
     expect(appendChildMock).toHaveBeenCalledWith(expect.any(Object));
     expect(appendChildMock).toHaveBeenCalledWith(expect.any(Object));
   });
-
-  
 });
-
 
 describe("saveChangesButton Event Listener", () => {
   let originalSessionStorage;
@@ -275,7 +308,7 @@ describe("saveChangesButton Event Listener", () => {
 
   beforeEach(() => {
     fetchMock.resetMocks();
-    mockElement.innerHTML = ""; 
+    mockElement.innerHTML = "";
     originalSessionStorage = global.sessionStorage;
     originalDocument = global.document;
 
@@ -302,8 +335,6 @@ describe("saveChangesButton Event Listener", () => {
     global.sessionStorage = originalSessionStorage;
     global.document = originalDocument;
   });
-  
-
 
   it("should handle errors during update", async () => {
     // Mock user input values
@@ -347,15 +378,25 @@ describe("saveChangesButton Event Listener", () => {
 
     // Check if the errors are logged
     expect(console.error).toHaveBeenCalledTimes(3);
-    expect(console.error).toHaveBeenNthCalledWith(1, "Error submitting the quote:", mockError1);
-    expect(console.error).toHaveBeenNthCalledWith(2, "Error submitting the quote:", mockError2);
-    expect(console.error).toHaveBeenNthCalledWith(3, "Error submitting the quote:", mockError3);
+    expect(console.error).toHaveBeenNthCalledWith(
+      1,
+      "Error submitting the quote:",
+      mockError1
+    );
+    expect(console.error).toHaveBeenNthCalledWith(
+      2,
+      "Error submitting the quote:",
+      mockError2
+    );
+    expect(console.error).toHaveBeenNthCalledWith(
+      3,
+      "Error submitting the quote:",
+      mockError3
+    );
   });
-
-  
 });
 
-describe('DOMContentLoaded event', () => {
+describe("DOMContentLoaded event", () => {
   beforeEach(() => {
     // Mock the necessary DOM elements and functions
     document.body.innerHTML = `
@@ -370,21 +411,23 @@ describe('DOMContentLoaded event', () => {
     `;
   });
 
-  test('Populate form fields and attach event listener', () => {
+  test("Populate form fields and attach event listener", () => {
     // Mock console.log to check if the messages are logged
     console.log = jest.fn();
 
     // Invoke the event listener directly
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener("DOMContentLoaded", () => {
       // Check if form fields are populated correctly
-      expect(document.getElementById('gallonsRequested').value).toBe('100');
-      expect(document.getElementById('deliveryAddress').value).toBe('123 Main St');
-      expect(document.getElementById('deliveryDate').value).toBe('2024-03-20');
-      expect(document.getElementById('suggestedPrice').value).toBe('2.50');
-      expect(document.getElementById('totalAmountDue').value).toBe('250.00');
+      expect(document.getElementById("gallonsRequested").value).toBe("100");
+      expect(document.getElementById("deliveryAddress").value).toBe(
+        "123 Main St"
+      );
+      expect(document.getElementById("deliveryDate").value).toBe("2024-03-20");
+      expect(document.getElementById("suggestedPrice").value).toBe("2.50");
+      expect(document.getElementById("totalAmountDue").value).toBe("250.00");
 
       // Check if event listener is attached to the form
-      const form = document.getElementById('fuelQuoteForm');
+      const form = document.getElementById("fuelQuoteForm");
       const submitListener = form.onsubmit;
       expect(submitListener).toBeTruthy(); // Ensure event listener is attached
 
@@ -393,27 +436,28 @@ describe('DOMContentLoaded event', () => {
       window.handleFormSubmit = mockHandleFormSubmit;
 
       // Simulate form submission
-      form.dispatchEvent(new Event('submit'));
+      form.dispatchEvent(new Event("submit"));
 
       // Ensure handleFormSubmit is called with the correct data
       expect(mockHandleFormSubmit).toHaveBeenCalledWith({
-        gallonsRequested: '100',
-        deliveryAddress: '123 Main St',
-        deliveryDate: '2024-03-20',
-        suggestedPrice: '2.50',
-        totalAmountDue: '250.00',
+        gallonsRequested: "100",
+        deliveryAddress: "123 Main St",
+        deliveryDate: "2024-03-20",
+        suggestedPrice: "2.50",
+        totalAmountDue: "250.00",
       });
 
       // Check if console.log messages are logged
-      expect(console.log).toHaveBeenCalledWith('Populating form fields...');
-      expect(console.log).toHaveBeenCalledWith('Gallons Requested:', '100');
-      expect(console.log).toHaveBeenCalledWith('Delivery Address:', '123 Main St');
-      expect(console.log).toHaveBeenCalledWith('Delivery Date:', '2024-03-20');
-      expect(console.log).toHaveBeenCalledWith('Suggested Price:', '2.50');
-      expect(console.log).toHaveBeenCalledWith('Total Amount Due:', '250.00');
+      expect(console.log).toHaveBeenCalledWith("Populating form fields...");
+      expect(console.log).toHaveBeenCalledWith("Gallons Requested:", "100");
+      expect(console.log).toHaveBeenCalledWith(
+        "Delivery Address:",
+        "123 Main St"
+      );
+      expect(console.log).toHaveBeenCalledWith("Delivery Date:", "2024-03-20");
+      expect(console.log).toHaveBeenCalledWith("Suggested Price:", "2.50");
+      expect(console.log).toHaveBeenCalledWith("Total Amount Due:", "250.00");
     });
-
-
   });
 });
 
@@ -425,7 +469,7 @@ describe("updateUserInterface", () => {
 
   beforeEach(() => {
     fetchMock.resetMocks();
-    mockElement.innerHTML = ""; 
+    mockElement.innerHTML = "";
     // Mock document.getElementById
     document.getElementById = jest.fn((id) => {
       return {
@@ -435,7 +479,7 @@ describe("updateUserInterface", () => {
         },
       };
     });
-  
+
     // Reset UI elements
     document.getElementById("loginNavItem").style.display = "none";
     document.getElementById("signupNavItem").style.display = "none";
@@ -453,7 +497,9 @@ describe("updateUserInterface", () => {
     // Assert UI changes
     expect(document.getElementById("loginNavItem").style.display).toBe("none");
     expect(document.getElementById("signupNavItem").style.display).toBe("none");
-    expect(document.getElementById("userInfoDropdown").style.display).toBe("none");
+    expect(document.getElementById("userInfoDropdown").style.display).toBe(
+      "none"
+    );
   });
 
   it("should show login/signup and hide user info dropdown when user is not logged in", () => {
@@ -465,7 +511,85 @@ describe("updateUserInterface", () => {
     // Assert UI changes
     expect(document.getElementById("loginNavItem").style.display).toBe("none");
     expect(document.getElementById("signupNavItem").style.display).toBe("none");
-    expect(document.getElementById("userInfoDropdown").style.display).toBe("none");
+    expect(document.getElementById("userInfoDropdown").style.display).toBe(
+      "none"
+    );
   });
 });
 
+describe("saveChangesButton Event Listener", () => {
+  let originalSessionStorage;
+  let originalDocument;
+
+  beforeEach(() => {
+    fetchMock.resetMocks();
+    originalSessionStorage = global.sessionStorage;
+    originalDocument = global.document;
+
+    // Mock sessionStorage
+    global.sessionStorage = {
+      getItem: jest.fn(),
+      setItem: jest.fn(),
+    };
+
+    // Mock document
+    global.document = {
+      getElementById: jest.fn().mockImplementation((id) => {
+        if (
+          id === "editName" ||
+          id === "editAddress1" ||
+          id === "editAddress2" ||
+          id === "editCity" ||
+          id === "editState" ||
+          id === "editZipcode"
+        ) {
+          return { value: "" };
+        }
+        return null;
+      }),
+      createElement: jest.fn().mockImplementation((tagName) => {
+        return {
+          id: tagName,
+          click: jest.fn(), // Mock click method for the button
+        };
+      }),
+    };
+  });
+
+  afterEach(() => {
+    // Restore the original sessionStorage and document objects
+    global.sessionStorage = originalSessionStorage;
+    global.document = originalDocument;
+  });
+
+  it("should display error message on failed update", async () => {
+    // Mock user information in sessionStorage
+    const userInfo = { id: "123", username: "testuser" };
+    global.sessionStorage.getItem.mockReturnValue(JSON.stringify(userInfo));
+
+    // Mock user input values
+    const name = "John Doe";
+    const address1 = "123 Main St";
+    const address2 = "Apt 101";
+    const city = "New York";
+    const state = "NY";
+    const zipcode = "10001";
+    global.document.getElementById.mockReturnValueOnce({ value: name });
+    global.document.getElementById.mockReturnValueOnce({ value: address1 });
+    global.document.getElementById.mockReturnValueOnce({ value: address2 });
+    global.document.getElementById.mockReturnValueOnce({ value: city });
+    global.document.getElementById.mockReturnValueOnce({ value: state });
+    global.document.getElementById.mockReturnValueOnce({ value: zipcode });
+
+    // Mock failed response from the server
+    fetchMock.mockRejectOnce(new Error("Network error"));
+
+    // Simulate click event on saveChangesButton
+    const saveChangesButton = document.createElement("button");
+    saveChangesButton.id = "saveChangesButton";
+    saveChangesButton.click();
+
+    // Check if error message is displayed
+    // Note: You may need to mock or assert the display of error message in your tests
+  });
+});

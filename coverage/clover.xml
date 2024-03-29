@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1711685007393" clover="3.2.0">
-  <project timestamp="1711685007393" name="All files">
+<coverage generated="1711691524669" clover="3.2.0">
+  <project timestamp="1711691524669" name="All files">
     <metrics statements="130" coveredstatements="37" conditionals="28" coveredconditionals="16" methods="15" coveredmethods="4" elements="173" coveredelements="57" complexity="0" loc="130" ncloc="130" packages="1" files="1" classes="1"/>
-    <file name="scripts.js" path="/Users/hasherkhan/Desktop/cosc4353_project-1/js/scripts.js">
+    <file name="scripts.js" path="C:\Users\ale07\OneDrive\School\Spring 2024\4353\cosc4353_project\js\scripts.js">
       <metrics statements="130" coveredstatements="37" conditionals="28" coveredconditionals="16" methods="15" coveredmethods="4"/>
       <line num="2" count="4" type="stmt"/>
       <line num="3" count="4" type="cond" truecount="2" falsecount="0"/>
