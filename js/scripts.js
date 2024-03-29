@@ -156,6 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("saveChangesButton")
     .addEventListener("click", async function () {
+      console.log("Save Changes button clicked!");
       const name = document.getElementById("editName").value;
       const address1 = document.getElementById("editAddress1").value;
       const address2 = document.getElementById("editAddress2").value;

@@ -260,3 +260,174 @@ describe("populateFuelHistory", () => {
 
   
 });
+
+
+describe("saveChangesButton Event Listener", () => {
+  let originalSessionStorage;
+  let originalDocument;
+
+  beforeEach(() => {
+    fetchMock.resetMocks();
+    mockElement.innerHTML = ""; 
+    originalSessionStorage = global.sessionStorage;
+    originalDocument = global.document;
+
+    // Mock sessionStorage
+    global.sessionStorage = {
+      getItem: jest.fn(),
+      setItem: jest.fn(),
+    };
+
+    // Mock document
+    global.document = {
+      getElementById: jest.fn(),
+      createElement: jest.fn().mockImplementation((tagName) => {
+        return {
+          id: tagName,
+          click: jest.fn(), // Mock click method
+        };
+      }),
+    };
+  });
+
+  afterEach(() => {
+    // Restore the original sessionStorage and document objects
+    global.sessionStorage = originalSessionStorage;
+    global.document = originalDocument;
+  });
+  
+
+
+  it("should send a request to update user information when saveChangesButton is clicked", async () => {
+    // Mock user input values
+    const name = "John Doe";
+    const address1 = "123 Main St";
+    const address2 = "Apt 101";
+    const city = "New York";
+    const state = "NY";
+    const zipcode = "10001";
+
+    // Mock userInfo in sessionStorage
+    const userInfo = {
+      id: "123",
+      name: "John Doe",
+      address1: "123 Main St",
+      address2: "Apt 101",
+      city: "New York",
+      state: "NY",
+      zipcode: "10001"
+    };
+    global.sessionStorage.getItem.mockReturnValueOnce(JSON.stringify(userInfo));
+
+    // Mock user input fields in the document
+    global.document.getElementById.mockReturnValueOnce({ value: name });
+    global.document.getElementById.mockReturnValueOnce({ value: address1 });
+    global.document.getElementById.mockReturnValueOnce({ value: address2 });
+    global.document.getElementById.mockReturnValueOnce({ value: city });
+    global.document.getElementById.mockReturnValueOnce({ value: state });
+    global.document.getElementById.mockReturnValueOnce({ value: zipcode });
+
+    // Mock response from the server
+    const mockResponse = { id: "123", name, address1, address2, city, state, zipcode };
+    fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+
+    // Mock the saveChangesButton click event listener
+    const clickEventListener = jest.fn();
+    const saveChangesButton = document.createElement("button");
+    saveChangesButton.id = "saveChangesButton";
+    global.document.getElementById.mockReturnValueOnce(saveChangesButton);
+    saveChangesButton.addEventListener = jest.fn().mockImplementation((event, callback) => {
+      if (event === "click") {
+        clickEventListener.mockImplementation(callback);
+      }   
+    });
+
+    // Trigger the click event on the saveChangesButton
+    saveChangesButton.click();
+
+    // Wait for asynchronous tasks to complete
+    await Promise.resolve();
+
+    // Check if the update request is sent with the correct data
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://4353.azurewebsites.net/api/api.php?action=update_user",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: userInfo.id,
+          name: name,
+          address1: address1,
+          address2: address2,
+          city: city,
+          state: state,
+          zipcode: zipcode,
+        }),
+      }
+    );
+
+    // Check if sessionStorage is updated with the new user information
+    expect(global.sessionStorage.setItem).toHaveBeenCalledWith(
+      "userInfo",
+      JSON.stringify(mockResponse)
+    );
+
+    // Assuming updateUserInterface and $("#editUserModal").modal are globally accessible functions
+    // Check if updateUserInterface is called
+    expect(updateUserInterface).toHaveBeenCalled();
+
+    // Check if the modal is hidden
+    expect($("#editUserModal").modal).toHaveBeenCalledWith("hide");
+});
+
+  it("should handle errors during update", async () => {
+    // Mock user input values
+    const name = "John Doe";
+    const address1 = "123 Main St";
+    const address2 = "Apt 101";
+    const city = "New York";
+    const state = "NY";
+    const zipcode = "10001";
+
+    // Mock userInfo in sessionStorage
+    const userInfo = {
+      id: "123",
+    };
+    global.sessionStorage.getItem.mockReturnValueOnce(JSON.stringify(userInfo));
+
+    // Mock user input fields in the document
+    global.document.getElementById.mockReturnValueOnce({ value: name });
+    global.document.getElementById.mockReturnValueOnce({ value: address1 });
+    global.document.getElementById.mockReturnValueOnce({ value: address2 });
+    global.document.getElementById.mockReturnValueOnce({ value: city });
+    global.document.getElementById.mockReturnValueOnce({ value: state });
+    global.document.getElementById.mockReturnValueOnce({ value: zipcode });
+
+    // Mock error responses from the server
+    const mockError1 = new Error("Network error");
+    const mockError2 = new Error("Network response was not ok");
+    const mockError3 = new Error("Network error occurred");
+
+    fetch.mockRejectedValueOnce(mockError1);
+    fetch.mockRejectedValueOnce(mockError2);
+    fetch.mockRejectedValueOnce(mockError3);
+
+    // Trigger the click event on the saveChangesButton
+    const saveChangesButton = document.createElement("button");
+    saveChangesButton.id = "saveChangesButton";
+    saveChangesButton.click();
+
+    // Wait for asynchronous tasks to complete
+    await Promise.resolve();
+
+    // Check if the errors are logged
+    expect(console.error).toHaveBeenCalledTimes(3);
+    expect(console.error).toHaveBeenNthCalledWith(1, "Error submitting the quote:", mockError1);
+    expect(console.error).toHaveBeenNthCalledWith(2, "Error submitting the quote:", mockError2);
+    expect(console.error).toHaveBeenNthCalledWith(3, "Error submitting the quote:", mockError3);
+  });
+
+  
+});
