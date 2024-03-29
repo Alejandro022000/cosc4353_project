@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28.68% </span>
+                <span class="strong">28.46% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>37/129</span>
+                <span class='fraction'>37/130</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">39.28% </span>
+                <span class="strong">57.14% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>11/28</span>
+                <span class='fraction'>16/28</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28.68% </span>
+                <span class="strong">28.46% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>37/129</span>
+                <span class='fraction'>37/130</span>
             </div>
         
             
@@ -387,19 +387,20 @@
 <a name='L322'></a><a href='#L322'>322</a>
 <a name='L323'></a><a href='#L323'>323</a>
 <a name='L324'></a><a href='#L324'>324</a>
-<a name='L325'></a><a href='#L325'>325</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L325'></a><a href='#L325'>325</a>
+<a name='L326'></a><a href='#L326'>326</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -410,12 +411,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -545,6 +546,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -725,12 +727,12 @@
       userInfo.username;
     document.getElementById("userInfoDetails").innerHTML = `
       &lt;strong&gt;ID:&lt;/strong&gt; ${userInfo.id}&lt;br&gt;
-      &lt;strong&gt;Name:&lt;/strong&gt; ${userInfo.name || <span class="branch-1 cbranch-no" title="branch not covered" >"Not provided"}</span>&lt;br&gt;
-      &lt;strong&gt;Address 1:&lt;/strong&gt; ${userInfo.address1 || <span class="branch-1 cbranch-no" title="branch not covered" >"Not provided"}</span>&lt;br&gt;
+      &lt;strong&gt;Name:&lt;/strong&gt; ${userInfo.name || "Not provided"}&lt;br&gt;
+      &lt;strong&gt;Address 1:&lt;/strong&gt; ${userInfo.address1 || "Not provided"}&lt;br&gt;
       &lt;strong&gt;Address 2:&lt;/strong&gt; ${userInfo.address2 || "Not provided"}&lt;br&gt;
-      &lt;strong&gt;City:&lt;/strong&gt; ${userInfo.city || <span class="branch-1 cbranch-no" title="branch not covered" >"Not provided"}</span>
-      &lt;strong&gt;State:&lt;/strong&gt; ${userInfo.state || <span class="branch-1 cbranch-no" title="branch not covered" >"Not provided"}</span>
-      &lt;strong&gt;Zipcode:&lt;/strong&gt; ${userInfo.zipcode || <span class="branch-1 cbranch-no" title="branch not covered" >"Not provided"}</span>
+      &lt;strong&gt;City:&lt;/strong&gt; ${userInfo.city || "Not provided"}
+      &lt;strong&gt;State:&lt;/strong&gt; ${userInfo.state || "Not provided"}
+      &lt;strong&gt;Zipcode:&lt;/strong&gt; ${userInfo.zipcode || "Not provided"}
     `;
 &nbsp;
     // Show the user info container
@@ -869,6 +871,7 @@ document.addEventListener("DOMContentLoaded", <span class="fstat-no" title="func
 <span class="cstat-no" title="statement not covered" >  document</span>
     .getElementById("saveChangesButton")
     .addEventListener("click", <span class="fstat-no" title="function not covered" >as</span>ync function () {
+<span class="cstat-no" title="statement not covered" >      console.log("Save Changes button clicked!");</span>
       const name = <span class="cstat-no" title="statement not covered" >document.getElementById("editName").value;</span>
       const address1 = <span class="cstat-no" title="statement not covered" >document.getElementById("editAddress1").value;</span>
       const address2 = <span class="cstat-no" title="statement not covered" >document.getElementById("editAddress2").value;</span>
@@ -1042,7 +1045,7 @@ module.exports = { handleFormSubmit, updateUserInterface, populateFuelHistory };
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-03-28T06:39:52.834Z
+                at 2024-03-29T04:03:27.382Z
             </div>
         <script src="prettify.js"></script>
         <script>
