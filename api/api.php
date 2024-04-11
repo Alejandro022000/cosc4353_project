@@ -143,7 +143,20 @@ function updateUserInformation() {
 
 function createFuelQuoteTable() {
     $conn = connectToDatabase();
-    $sql = "CREATE TABLE IF NOT EXISTS fuel_quotes (
+
+    // Check if the table already exists
+    $checkSql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'fuel_quotes'";
+    $checkStmt = $conn->prepare($checkSql);
+    $checkStmt->execute();
+    $tableExists = $checkStmt->fetch();
+
+    if ($tableExists) {
+        echo json_encode(array("message" => "Fuel Quote Table already exists"));
+        return;
+    }
+
+    // Create the table if it doesn't exist
+    $sql = "CREATE TABLE fuel_quotes (
         id INT AUTO_INCREMENT PRIMARY KEY,
         gallons_requested DECIMAL(10,2) NOT NULL,
         delivery_address VARCHAR(255) NOT NULL,
@@ -159,6 +172,7 @@ function createFuelQuoteTable() {
         echo json_encode(array("error" => $e->getMessage()));
     }
 }
+
 
 
 // Basic routing
