@@ -157,7 +157,7 @@ function createFuelQuoteTable() {
 
     // Create the table if it doesn't exist
     $sql = "CREATE TABLE fuel_quotes (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id INT IDENTITY(1,1) PRIMARY KEY,
         gallons_requested DECIMAL(10,2) NOT NULL,
         delivery_address VARCHAR(255) NOT NULL,
         delivery_date DATE NOT NULL,
@@ -172,6 +172,7 @@ function createFuelQuoteTable() {
         echo json_encode(array("error" => $e->getMessage()));
     }
 }
+
 
 
 
