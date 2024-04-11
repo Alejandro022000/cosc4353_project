@@ -734,17 +734,3 @@ describe("signupForm Form Submission", () => {
     require("../js/scripts.js");
   });
 });
-// Example function in scripts.js
-function calculateTotal(price, quantity) {
-  return price * quantity;
-}
-
-// Test case for calculateTotal
-describe("calculateTotal", () => {
-  it("should return the total cost given a price and quantity", () => {
-    const price = 10;
-    const quantity = 3;
-    const total = calculateTotal(price, quantity);
-    expect(total).toBe(30); // Assert that the total is correct
-  });
-});
