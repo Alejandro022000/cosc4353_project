@@ -169,6 +169,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             case 'get_table':
                 getTableData();
                 break;
+            case 'create_table':
+                createFuelQuoteTable();
+                break;
             // Add more cases for other actions
             default:
                 echo json_encode(array("error" => "Unknown action"));
@@ -190,9 +193,6 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 break;
             case 'update_user':
                 updateUserInformation();
-                break;
-            case 'create_table':
-                createFuelQuoteTable();
                 break;
             // Add more cases for other actions
             default:
