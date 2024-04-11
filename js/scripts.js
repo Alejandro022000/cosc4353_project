@@ -295,9 +295,10 @@ function populateFuelHistory() {
     fuelHistoryTable.appendChild(row);
   });
 }
+
+
 async function handleFormSubmit(formData) {
-  const apiUrl =
-    "https://4353.azurewebsites.net/api/api.php?action=submit_quote";
+  const apiUrl = "https://4353.azurewebsites.net/api/api.php?action=submit_quote"; // Change to your API endpoint
 
   try {
     const response = await fetch(apiUrl, {
@@ -322,4 +323,18 @@ async function handleFormSubmit(formData) {
     ).innerHTML = `<strong>Error:</strong> ${error.message}`;
   }
 }
+
+// Modify DOMContentLoaded to populate form fields with user-specific data
+document.addEventListener("DOMContentLoaded", function () {
+  const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+  if (userInfo) {
+    // Populate form fields if user data is available
+    document.getElementById("gallonsRequested").value = userInfo.gallonsRequested || "";
+    document.getElementById("deliveryAddress").value = userInfo.deliveryAddress || "";
+    document.getElementById("deliveryDate").value = userInfo.deliveryDate || "";
+    document.getElementById("suggestedPrice").value = userInfo.suggestedPrice || "";
+    document.getElementById("totalAmountDue").value = userInfo.totalAmountDue || "";
+  }
+});
+
 module.exports = { handleFormSubmit, updateUserInterface, populateFuelHistory };
