@@ -142,65 +142,6 @@ function updateUserInformation() {
 }
 
 
-function saveQuoteData() {
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    // Validate user session or authentication token
-    if (!isset($_SESSION['user'])) {
-        echo json_encode(array("error" => "User not authenticated"));
-        return;
-    }
-
-    // Get user ID from session
-    $userId = $_SESSION['user']['id'];
-
-    // Extract form data
-    $gallonsRequested = $data['gallonsRequested'];
-    $deliveryAddress = $data['deliveryAddress'];
-    $deliveryDate = $data['deliveryDate'];
-    $suggestedPrice = $data['suggestedPrice'];
-    $totalAmountDue = $data['totalAmountDue'];
-
-    // Save data to the database (you need to implement this part)
-
-    // Example: Assuming you have a database connection and a table named 'user_quotes'
-    $conn = connectToDatabase();
-    $sql = "INSERT INTO user_quotes (user_id, gallons_requested, delivery_address, delivery_date, suggested_price, total_amount_due) VALUES (:userId, :gallonsRequested, :deliveryAddress, :deliveryDate, :suggestedPrice, :totalAmountDue)";
-    try {
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([
-            ':userId' => $userId,
-            ':gallonsRequested' => $gallonsRequested,
-            ':deliveryAddress' => $deliveryAddress,
-            ':deliveryDate' => $deliveryDate,
-            ':suggestedPrice' => $suggestedPrice,
-            ':totalAmountDue' => $totalAmountDue
-        ]);
-        echo json_encode(array("message" => "Quote data saved successfully"));
-    } catch (PDOException $e) {
-        echo json_encode(array("error" => $e->getMessage()));
-    }
-}
-
-// Basic routing
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_GET['action'])) {
-        $action = $_GET['action'];
-        switch ($action) {
-            // Add case for saving quote data
-            case 'save_quote_data':
-                saveQuoteData();
-                break;
-            // Handle other actions
-            default:
-                echo json_encode(array("error" => "Unknown action"));
-                break;
-        }
-    } else {
-        echo json_encode(array("error" => "No action specified"));
-    }
-}
-
 
 // Basic routing
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
