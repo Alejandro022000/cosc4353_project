@@ -141,6 +141,24 @@ function updateUserInformation() {
     }
 }
 
+function createFuelQuoteTable() {
+    $conn = connectToDatabase();
+    $sql = "CREATE TABLE IF NOT EXISTS fuel_quotes (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        gallons_requested DECIMAL(10,2) NOT NULL,
+        delivery_address VARCHAR(255) NOT NULL,
+        delivery_date DATE NOT NULL,
+        suggested_price DECIMAL(10,2) NOT NULL,
+        total_amount_due DECIMAL(10,2) NOT NULL
+    )";
+
+    try {
+        $conn->exec($sql);
+        echo json_encode(array("message" => "Fuel Quote Table created successfully"));
+    } catch (PDOException $e) {
+        echo json_encode(array("error" => $e->getMessage()));
+    }
+}
 
 
 // Basic routing
@@ -172,6 +190,9 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 break;
             case 'update_user':
                 updateUserInformation();
+                break;
+            case 'create_table':
+                createFuelQuoteTable();
                 break;
             // Add more cases for other actions
             default:

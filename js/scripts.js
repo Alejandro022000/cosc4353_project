@@ -171,29 +171,34 @@ document.addEventListener("DOMContentLoaded", function () {
         "https://4353.azurewebsites.net/api/api.php?action=update_user";
 
       try {
+        const requestBody = {
+          id: userId,
+          name: name,
+          address1: address1,
+          address2: address2,
+          city: city,
+          state: state,
+          zipcode: zipcode,
+        };
+
         const response = await fetch(updateUrl, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            id: userId,
-            name: name,
-            address1: address1,
-            address2: address2,
-            city: city,
-            state: state,
-            zipcode: zipcode,
-          }),
+          body: JSON.stringify(requestBody),
         });
         const data = await response.json();
 
         if (data.error) {
           console.error("Update Error:", data.error);
         } else {
-          sessionStorage.setItem("userInfo", JSON.stringify(data));
+          sessionStorage.setItem("userInfo", JSON.stringify(requestBody));
+          console.log(JSON.stringify(requestBody));
           updateUserInterface();
           $("#editUserModal").modal("hide");
+          //reffresh the page
+          //location.reload();
         }
       } catch (error) {
         console.error("Error during update:", error);
