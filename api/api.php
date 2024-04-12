@@ -141,39 +141,22 @@ function updateUserInformation() {
     }
 }
 
-function createFuelQuoteTable() {
+function getFuelQuotesByUserId() {
+    $data = json_decode(file_get_contents('php://input'), true);
+    $userId = $data['user_id'];
+
     $conn = connectToDatabase();
-
-    // Check if the table already exists
-    $checkSql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'fuel_quotes'";
-    $checkStmt = $conn->prepare($checkSql);
-    $checkStmt->execute();
-    $tableExists = $checkStmt->fetch();
-
-    if ($tableExists) {
-        echo json_encode(array("message" => "Fuel Quote Table already exists"));
-        return;
-    }
-
-    // Create the table if it doesn't exist
-    $sql = "CREATE TABLE fuel_quotes (
-        id INT IDENTITY(1,1) PRIMARY KEY,
-        gallons_requested DECIMAL(10,2) NOT NULL,
-        delivery_address VARCHAR(255) NOT NULL,
-        delivery_date DATE NOT NULL,
-        suggested_price DECIMAL(10,2) NOT NULL,
-        total_amount_due DECIMAL(10,2) NOT NULL
-    )";
+    $sql = "SELECT * FROM fuel_quotes WHERE user_id = :user_id";
 
     try {
-        $conn->exec($sql);
-        echo json_encode(array("message" => "Fuel Quote Table created successfully"));
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['user_id' => $userId]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($results);
     } catch (PDOException $e) {
         echo json_encode(array("error" => $e->getMessage()));
     }
 }
-
-
 
 
 // Basic routing
@@ -183,9 +166,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         switch ($action) {
             case 'get_table':
                 getTableData();
-                break;
-            case 'create_table':
-                createFuelQuoteTable();
                 break;
             // Add more cases for other actions
             default:
@@ -209,6 +189,9 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             case 'update_user':
                 updateUserInformation();
                 break;
+            case 'get_fuel_quotes':
+                getFuelQuotesByUserId();
+                break;
             // Add more cases for other actions
             default:
                 echo json_encode(array("error" => "Unknown action"));
@@ -218,7 +201,5 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo json_encode(array("error" => "No action specified"));
     }
 }
-else {
-    echo json_encode(array("error" => "Invalid request method"));
-}
+
 ?>
