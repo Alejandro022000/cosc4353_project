@@ -158,6 +158,32 @@ function getFuelQuotesByUserId() {
     }
 }
 
+function insertFuelQuote() {
+    $data = json_decode(file_get_contents('php://input'), true);
+    $userId = $data['user_id'];
+    $gallons = $data['gallons'];
+    $deliveryDate = $data['delivery_date'];
+    $suggestedPrice = $data['suggested_price'];
+    $totalPrice = $data['total_price'];
+
+    $conn = connectToDatabase();
+    $sql = "INSERT INTO fuel_quotes (user_id, gallons, delivery_date, suggested_price, total_price) VALUES (:user_id, :gallons, :delivery_date, :suggested_price, :total_price)";
+
+    try {
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            ':user_id' => $userId,
+            ':gallons' => $gallons,
+            ':delivery_date' => $deliveryDate,
+            ':suggested_price' => $suggestedPrice,
+            ':total_price' => $totalPrice
+        ]);
+        echo json_encode(array("message" => "Fuel quote added successfully"));
+    } catch (PDOException $e) {
+        echo json_encode(array("error" => $e->getMessage()));
+    }
+}
+
 
 // Basic routing
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -192,6 +218,9 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             case 'get_fuel_quotes':
                 getFuelQuotesByUserId();
                 break;
+            case 'insert_fuel_quote':
+                insertFuelQuote();
+                break;
             // Add more cases for other actions
             default:
                 echo json_encode(array("error" => "Unknown action"));
@@ -201,5 +230,6 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo json_encode(array("error" => "No action specified"));
     }
 }
+
 
 ?>
