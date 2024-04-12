@@ -1,5 +1,7 @@
 function updateUserInterface() {
+  //populateDeliveryAddress();
   const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+
   if (userInfo) {
     // Hide Login/Signup and Show User Info Dropdown
     document.getElementById("loginNavItem").style.display = "none";
@@ -8,7 +10,7 @@ function updateUserInterface() {
     document.getElementById("navbarDropdown").textContent = userInfo.username; // Use username or name based on your session structure
 
     // Update the div with user information
-    document.getElementById("userInfoUsername").textContent +=
+    document.getElementById("userInfoUsername").textContent ==
       userInfo.username;
     document.getElementById("userInfoDetails").innerHTML = `
       <strong>ID:</strong> ${userInfo.id}<br>
@@ -29,31 +31,21 @@ function updateUserInterface() {
     document.getElementById("userInfoDropdown").style.display = "none";
   }
 }
-async function insertFuelQuote(formData) {
-  const apiUrl =
-    "https://4353.azurewebsites.net/api/api.php?action=insert_fuel_quote";
 
-  try {
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-
-    const data = await response.json();
-    document.getElementById("formFeedback").innerHTML =
-      "<strong>Success:</strong> Fuel quote added successfully!";
-  } catch (error) {
-    console.error("Error submitting the fuel quote:", error);
-    document.getElementById(
-      "formFeedback"
-    ).innerHTML = `<strong>Error:</strong> ${error.message}`;
+function populateDeliveryAddress() {
+  const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+  if (userInfo) {
+    // Format the delivery address from user information
+    const fullAddress = `${userInfo.address1 || ""} ${
+      userInfo.address2 || ""
+    }, ${userInfo.city || ""} ${userInfo.state || ""} ${userInfo.zipcode || ""}`
+      .trim()
+      .replace(/\s\s+/g, " ");
+    //console.log("fullAddress: " + fullAddress);
+    document.getElementById("deliveryAddress").value = fullAddress;
+  } else {
+    // Clear the delivery address if no user is logged in
+    document.getElementById("deliveryAddress").value = "";
   }
 }
 
@@ -69,11 +61,10 @@ async function getFuelQuotesByUserId(userId) {
       },
       body: JSON.stringify({ user_id: userId }),
     });
-
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
-
+    //console.log("sent data: " + JSON.stringify({ user_id: userId }));
     const data = await response.json();
     return data;
   } catch (error) {
@@ -178,6 +169,9 @@ document
     } catch (error) {
       console.error("Error during login:", error);
     }
+    if (!data.error) {
+      displayFuelQuotes(); // Update the fuel quote table after successful login
+    }
   });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -208,7 +202,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("saveChangesButton")
     .addEventListener("click", async function () {
-      console.log("Save Changes button clicked!");
+      //console.log("Save Changes button clicked!");
       const name = document.getElementById("editName").value;
       const address1 = document.getElementById("editAddress1").value;
       const address2 = document.getElementById("editAddress2").value;
@@ -246,7 +240,7 @@ document.addEventListener("DOMContentLoaded", function () {
           console.error("Update Error:", data.error);
         } else {
           sessionStorage.setItem("userInfo", JSON.stringify(requestBody));
-          console.log(JSON.stringify(requestBody));
+          //console.log(JSON.stringify(requestBody));
           updateUserInterface();
           $("#editUserModal").modal("hide");
           //reffresh the page
@@ -258,151 +252,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-  console.log("DOM Loaded");
-  // Hardcoded values
-  var gallonsRequested = 100;
-  var deliveryAddress = "123 Main St";
-  var deliveryDate = "2024-03-20";
-  var suggestedPrice = "2.50";
-  var totalAmountDue = "250.00";
-
-  // Populate form fields with hardcoded values
-  console.log("Populating form fields...");
-  console.log("Gallons Requested:", gallonsRequested);
-  console.log("Delivery Address:", deliveryAddress);
-  console.log("Delivery Date:", deliveryDate);
-  console.log("Suggested Price:", suggestedPrice);
-  console.log("Total Amount Due:", totalAmountDue);
-
-  // Populate form fields with hardcoded values
-  document.getElementById("gallonsRequested").value = gallonsRequested;
-  document.getElementById("deliveryAddress").value = deliveryAddress;
-  document.getElementById("deliveryDate").value = deliveryDate;
-  document.getElementById("suggestedPrice").value = suggestedPrice;
-  document.getElementById("totalAmountDue").value = totalAmountDue;
-
-  // Add event listener to handle form submission
-  document
-    .getElementById("fuelQuoteForm")
-    .addEventListener("submit", async function (event) {
-      event.preventDefault(); // Prevent the default form submission behavior
-
-      // Collect form data
-      const formData = {
-        gallonsRequested: document.getElementById("gallonsRequested").value,
-        deliveryAddress: document.getElementById("deliveryAddress").value,
-        deliveryDate: document.getElementById("deliveryDate").value,
-        suggestedPrice: document.getElementById("suggestedPrice").value,
-        totalAmountDue: document.getElementById("totalAmountDue").value,
-      };
-
-      // Call the handleFormSubmit function with the form data
-      await handleFormSubmit(formData);
-    });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  populateFuelHistory(); // Call populateFuelHistory function on DOMContentLoaded
-});
-
-function populateFuelHistory() {
-  // Your hardcoded fuel history data
-  const fuelHistoryData = [
-    {
-      gallonsRequested: 100,
-      deliveryAddress: "123 Main St",
-      deliveryDate: "2024-03-20",
-      pricePerGallon: 2.5,
-      totalAmountDue: 250.0,
-    },
-    {
-      gallonsRequested: 150,
-      deliveryAddress: "786 River Par St",
-      deliveryDate: "2024-02-13",
-      pricePerGallon: 2.25,
-      totalAmountDue: 337.5,
-    },
-    {
-      gallonsRequested: 235,
-      deliveryAddress: "110 Farms to Market Rd",
-      deliveryDate: "2023-09-30",
-      pricePerGallon: 2.1,
-      totalAmountDue: 493.5,
-    },
-  ];
-
-  const fuelHistoryTable = document.getElementById("fuelQuoteTableBody");
-
-  // Clear existing content inside the tbody
-  fuelHistoryTable.innerHTML = "";
-
-  // Populate the table with data
-  fuelHistoryData.forEach((entry) => {
-    const row = document.createElement("tr");
-
-    row.innerHTML = `
-            <td>${entry.gallonsRequested}</td>
-            <td>${entry.deliveryAddress}</td>
-            <td>${entry.deliveryDate}</td>
-            <td>$${entry.pricePerGallon.toFixed(2)}</td>
-            <td>$${entry.totalAmountDue.toFixed(2)}</td>
-        `;
-
-    fuelHistoryTable.appendChild(row);
-  });
-}
-async function handleFormSubmit(formData) {
-  const apiUrl =
-    "https://4353.azurewebsites.net/api/api.php?action=submit_quote";
-
-  try {
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-
-    const data = await response.json();
-    document.getElementById("formFeedback").innerHTML =
-      "<strong>Success:</strong> Quote submitted successfully!";
-  } catch (error) {
-    console.error("Error submitting the quote:", error);
-    document.getElementById(
-      "formFeedback"
-    ).innerHTML = `<strong>Error:</strong> ${error.message}`;
-  }
-}
-
-//insertFuelQuote function
-document
-  .getElementById("fuelQuoteForm")
-  .addEventListener("submit", async function (event) {
-    event.preventDefault(); // Prevent the default form submission behavior
-
-    // Collect form data
-    const formData = {
-      user_id: 1, // Hardcoded user ID for example purposes
-      gallons: document.getElementById("gallonsRequested").value,
-      delivery_date: document.getElementById("deliveryDate").value,
-      suggested_price: document.getElementById("suggestedPrice").value,
-      total_price: document.getElementById("totalAmountDue").value,
-    };
-
-    // Call the insertFuelQuote function with the form data
-    await insertFuelQuote(formData);
-  });
-
-// getFuelQuotesByUserId function
 async function displayFuelQuotes() {
-  const userId = 1; // Hardcoded user ID for example purposes
+  const userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
+
   const fuelQuotes = await getFuelQuotesByUserId(userId);
+  //console.log(fuelQuotes); // Check if the data is being fetched correctly
 
   const tableBody = document.getElementById("fuelQuoteTableBody");
   tableBody.innerHTML = ""; // Clear existing rows
@@ -411,16 +265,105 @@ async function displayFuelQuotes() {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${quote.gallons}</td>
+      <td>${quote.delivery_address}</td>
       <td>${quote.delivery_date}</td>
-      <td>${quote.suggested_price}</td>
-      <td>${quote.total_price}</td>
+      <td>$${parseFloat(quote.suggested_price).toFixed(2)}</td>
+      <td>$${parseFloat(quote.total_price).toFixed(2)}</td>
     `;
     tableBody.appendChild(row);
   });
 }
 
-// Call displayFuelQuotes to populate the table when the page loads
+// Call displayFuelQuotes to populate the table when the page loads or when the user logs in
 document.addEventListener("DOMContentLoaded", function () {
-  displayFuelQuotes();
+  const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+  if (userInfo) {
+    displayFuelQuotes();
+  }
 });
-module.exports = { handleFormSubmit, updateUserInterface, populateFuelHistory };
+document
+  .getElementById("fuelQuoteForm")
+  .addEventListener("submit", async function (event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    const userInfo = JSON.parse(sessionStorage.getItem("userInfo")); // Assuming userInfo contains the user ID
+    if (!userInfo) {
+      alert("Please log in to submit a fuel quote.");
+      return;
+    }
+
+    const gallonsRequested = document.getElementById("gallonsRequested").value;
+    const deliveryAddress = document.getElementById("deliveryAddress").value; // Ensure this is set from user data
+    const deliveryDate = document.getElementById("deliveryDate").value;
+    const suggestedPrice = document.getElementById("suggestedPrice").value;
+    const totalPrice = document.getElementById("totalAmountDue").value;
+
+    // Check if the delivery date is valid
+    if (!deliveryDate || deliveryDate === "1900-01-01") {
+      dateError.textContent = "Please enter a valid delivery date.";
+      dateError.style.display = "block"; // Make sure the error message is visible
+      return; // Stop the function here to prevent submission
+    } else {
+      dateError.textContent = "";
+      dateError.style.display = "none";
+    }
+
+    // Prepare the data to be sent to the API
+    const formData = {
+      user_id: userInfo.id,
+      gallons: gallonsRequested,
+      delivery_date: deliveryDate,
+      suggested_price: suggestedPrice,
+      total_price: totalPrice,
+    };
+
+    try {
+      const response = await fetch(
+        "https://4353.azurewebsites.net/api/api.php?action=insert_fuel_quote",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        document.getElementById("formFeedback").style.display = "block";
+        document.getElementById("formFeedback").innerHTML =
+          "<strong>Success:</strong> Fuel quote added successfully!";
+        // Optionally reset the form or redirect the user
+      } else {
+        throw new Error(
+          data.message || "An error occurred while submitting the fuel quote."
+        );
+      }
+    } catch (error) {
+      console.error("Error submitting the fuel quote:", error);
+      document.getElementById("formFeedback").style.display = "block";
+      document.getElementById(
+        "formFeedback"
+      ).innerHTML = `<strong>Error:</strong> ${error.message}`;
+    }
+  });
+document
+  .getElementById("gallonsRequested")
+  .addEventListener("input", function () {
+    const gallons = parseFloat(this.value);
+    const suggestedPrice = parseFloat(
+      document.getElementById("suggestedPrice").value
+    );
+
+    // Check if gallons is a number and greater than 0
+    if (!isNaN(gallons) && gallons > 0) {
+      const totalPrice = gallons * suggestedPrice;
+      document.getElementById("totalAmountDue").value = totalPrice.toFixed(2); // Format to two decimal places
+    } else {
+      document.getElementById("totalAmountDue").value = ""; // Clear the total amount due if input is not valid
+    }
+  });
+
+module.exports = { updateUserInterface };

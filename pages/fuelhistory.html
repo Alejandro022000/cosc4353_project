@@ -94,7 +94,7 @@
             >
               <a class="dropdown-item" href="profile.html">Account</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="fuelhistory.html">Fuel History</a>
+              <a class="dropdown-item" href="quoteform.html">Quote Form</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" id="signOutButton" href="#">Sign Out</a>
             </div>
@@ -103,56 +103,60 @@
       </div>
     </nav>
 
-    <div class="container mt-3 justify-content-center align-items-center custom-width" id="fuelQuoteHistoryContainer">
-        <div class="card border-dark">
-           <div class="card-header bg-dark text-white">
-              <h4>Fuel Quote History</h4>
-           </div>
-           <div class="card-body">
-              <style>
-                  table {
-                        width: 100%;
-                        border:1px solid black;
-                        font-size: 100%;
-                   }
-                
-                  th, td {
-                        text-align: center;
-                        color: black;
-                        padding: 15%;
-                   }
-                  
-                   th {
-                        border:2px solid black  !important;
-                        font-weight: bold;
-                        font-size: 130%;
-                   }
-
-                   td {
-                        border:1px solid black;
-                        font-size: 100%;
-                        font-family: 'Arial', sans-serif;
-                        font-weight: normal;
-                   }
-              </style>
-              <table class="table table-striped">
-                 <thead>
-                    <tr>
-                       <th>Gallons Requested</th>
-                       <th>Delivery Address</th>
-                       <th>Delivery Date</th>
-                       <th>Suggested Price / gallon</th>
-                       <th>Total Amount Due</th>
-                    </tr>
-                 </thead>
-                 <tbody id="fuelQuoteTableBody">
-                    <!-- History data will be present here in table body -->
-                 </tbody>
-              </table>
-           </div>
+    <div
+      class="container mt-3 justify-content-center align-items-center custom-width"
+      id="fuelQuoteHistoryContainer"
+    >
+      <div class="card border-dark">
+        <div class="card-header bg-dark text-white">
+          <h4>Fuel Quote History</h4>
         </div>
-     </div>
-    
+        <div class="card-body">
+          <style>
+            table {
+              width: 100%;
+              border: 1px solid black;
+              font-size: 100%;
+            }
+
+            th,
+            td {
+              text-align: center;
+              color: black;
+              padding: 15%;
+            }
+
+            th {
+              border: 2px solid black !important;
+              font-weight: bold;
+              font-size: 130%;
+            }
+
+            td {
+              border: 1px solid black;
+              font-size: 100%;
+              font-family: "Arial", sans-serif;
+              font-weight: normal;
+            }
+          </style>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Gallons Requested</th>
+                <th>Delivery Address</th>
+                <th>Delivery Date</th>
+                <th>Suggested Price / gallon</th>
+                <th>Total Amount Due</th>
+              </tr>
+            </thead>
+            <tbody id="fuelQuoteTableBody">
+              <!-- History data will be present here in table body -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
     <!-- Login Modal -->
     <div
       class="modal fade"
