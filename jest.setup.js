@@ -1,13 +1,13 @@
-// jest.setup.js
 const { JSDOM } = require('jsdom');
 
-const dom = new JSDOM('<!doctype html><html><body><div id="signupForm"></div><div id="loginModal"></div></body></html>', {
+const dom = new JSDOM('<!doctype html><html><body><div id="signupForm"></div><div id="loginModal"></div><form id="fuelQuoteForm"></form><input id="gallonsRequested"></input><table><tbody id="fuelQuoteTableBody"></tbody></table></body></html>', {
   url: 'http://localhost'
 });
 
 global.document = dom.window.document;
 global.window = dom.window;
 global.console.error = jest.fn();
+global.document.dispatchEvent = jest.fn();
 
 global.navigator = {
   userAgent: 'node.js',
@@ -23,5 +23,3 @@ global.document.createElement = jest.fn().mockImplementation((tagName) => {
 
 // Append body to the document directly
 global.document.body = dom.window.document.body;
-
-

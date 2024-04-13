@@ -366,4 +366,4 @@ document
     }
   });
 
-module.exports = { updateUserInterface };
+module.exports = { updateUserInterface, populateDeliveryAddress, getFuelQuotesByUserId, displayFuelQuotes };

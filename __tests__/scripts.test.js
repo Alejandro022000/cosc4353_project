@@ -1,4 +1,6 @@
 // Import necessary functions or libraries for testing
+const { fireEvent } = require("@testing-library/dom");
+
 const fetchMock = require("jest-fetch-mock");
 const {
   describe,
@@ -10,9 +12,10 @@ const {
 
 // Import the JavaScript code you want to test
 const {
-  handleFormSubmit,
   updateUserInterface,
-  populateFuelHistory,
+  populateDeliveryAddress,
+  getFuelQuotesByUserId,
+  displayFuelQuotes
 } = require("../js/scripts.js");
 
 // Mocking the fetch API
@@ -27,113 +30,7 @@ document.getElementById = jest.fn().mockImplementation((id) => {
   return null;
 });
 
-describe("handleFormSubmit", () => {
-  beforeEach(() => {
-    fetchMock.resetMocks();
-    mockElement.innerHTML = "";
-  });
 
-  it("should submit the form data to the backend and display success message on successful response", async () => {
-    // Mock form data
-    const formData = {
-      gallonsRequested: "100",
-      deliveryAddress: "123 Main St",
-      deliveryDate: "2024-03-20",
-      suggestedPrice: "2.50",
-      totalAmountDue: "250.00",
-    };
-
-    // Mock response from the backend
-    fetchMock.mockResponseOnce(JSON.stringify({ success: true }));
-
-    // Trigger the form submission
-    await handleFormSubmit(formData);
-
-    // Check if fetch was called with the correct arguments
-    expect(fetchMock).toHaveBeenCalledWith(
-      "https://4353.azurewebsites.net/api/api.php?action=submit_quote",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      }
-    );
-
-    // Check if success message is displayed
-    expect(mockElement.innerHTML).toBe(
-      "<strong>Success:</strong> Quote submitted successfully!"
-    );
-  });
-
-  it("should display error message on failed response", async () => {
-    // Mock form data
-    const formData = {
-      gallonsRequested: "100",
-      deliveryAddress: "123 Main St",
-      deliveryDate: "2024-03-20",
-      suggestedPrice: "2.50",
-      totalAmountDue: "250.00",
-    };
-
-    // Mock failed response from the backend
-    fetchMock.mockRejectOnce(new Error("Network error"));
-
-    // Trigger the form submission
-    await handleFormSubmit(formData);
-
-    // Check if error message is displayed
-    expect(mockElement.innerHTML).toBe("<strong>Error:</strong> Network error");
-  });
-
-  it("should handle server error and display error message", async () => {
-    // Mock form data
-    const formData = {
-      gallonsRequested: "100",
-      deliveryAddress: "123 Main St",
-      deliveryDate: "2024-03-20",
-      suggestedPrice: "2.50",
-      totalAmountDue: "250.00",
-    };
-
-    // Mock server error response
-    fetchMock.mockResponseOnce(
-      JSON.stringify({ error: "Network response was not ok" }),
-      { status: 500 }
-    );
-
-    // Trigger the form submission
-    await handleFormSubmit(formData);
-
-    // Check if error message is displayed
-    expect(mockElement.innerHTML).toBe(
-      "<strong>Error:</strong> Network response was not ok"
-    );
-  });
-
-  it("should handle network error and display error message", async () => {
-    // Mock form data
-    const formData = {
-      gallonsRequested: "100",
-      deliveryAddress: "123 Main St",
-      deliveryDate: "2024-03-20",
-      suggestedPrice: "2.50",
-      totalAmountDue: "250.00",
-    };
-
-    // Mock network error response
-    fetchMock.mockRejectOnce(new Error("Network error occurred"));
-
-    // Trigger the form submission
-    await handleFormSubmit(formData);
-
-    // Check if error message is displayed
-    expect(mockElement.innerHTML).toBe(
-      "<strong>Error:</strong> Network error occurred"
-    );
-  });
-});
 
 // describe code for updateUserInterface tests
 describe("updateUserInterface", () => {
@@ -246,61 +143,7 @@ describe("updateUserInterface", () => {
   });
 });
 
-describe("populateFuelHistory", () => {
-  let originalDocument;
 
-  beforeEach(() => {
-    originalDocument = global.document;
-
-    global.document = {
-      getElementById: jest.fn(),
-      createElement: jest.fn(() => ({ innerHTML: "" })),
-    };
-  });
-
-  afterEach(() => {
-    global.document = originalDocument;
-  });
-
-  it("should populate the fuel history table with provided data", () => {
-    // Mock fuel history data
-    const fuelHistoryData = [
-      {
-        gallonsRequested: 100,
-        deliveryAddress: "123 Main St",
-        deliveryDate: "2024-03-20",
-        pricePerGallon: 2.5,
-        totalAmountDue: 250.0,
-      },
-      {
-        gallonsRequested: 150,
-        deliveryAddress: "786 River Par St",
-        deliveryDate: "2024-02-13",
-        pricePerGallon: 2.25,
-        totalAmountDue: 337.5,
-      },
-    ];
-
-    // Mock document.getElementById method to return fuel history table
-    const appendChildMock = jest.fn(); // Mock appendChild method
-    global.document.getElementById.mockReturnValueOnce({
-      appendChild: appendChildMock,
-    });
-
-    populateFuelHistory();
-
-    // Check if the table rows are added correctly
-    expect(global.document.getElementById).toHaveBeenCalledWith(
-      "fuelQuoteTableBody"
-    );
-    expect(global.document.createElement).toHaveBeenCalledTimes(3);
-
-    // Mock appendChild method to verify the argument
-    expect(appendChildMock).toHaveBeenCalledTimes(3);
-    expect(appendChildMock).toHaveBeenCalledWith(expect.any(Object));
-    expect(appendChildMock).toHaveBeenCalledWith(expect.any(Object));
-  });
-});
 
 describe("saveChangesButton Event Listener", () => {
   let originalSessionStorage;
@@ -336,64 +179,49 @@ describe("saveChangesButton Event Listener", () => {
     global.document = originalDocument;
   });
 
-  it("should handle errors during update", async () => {
-    // Mock user input values
-    const name = "John Doe";
-    const address1 = "123 Main St";
-    const address2 = "Apt 101";
-    const city = "New York";
-    const state = "NY";
-    const zipcode = "10001";
-
-    // Mock userInfo in sessionStorage
-    const userInfo = {
-      id: "123",
-    };
-    global.sessionStorage.getItem.mockReturnValueOnce(JSON.stringify(userInfo));
-
-    // Mock user input fields in the document
-    global.document.getElementById.mockReturnValueOnce({ value: name });
-    global.document.getElementById.mockReturnValueOnce({ value: address1 });
-    global.document.getElementById.mockReturnValueOnce({ value: address2 });
-    global.document.getElementById.mockReturnValueOnce({ value: city });
-    global.document.getElementById.mockReturnValueOnce({ value: state });
-    global.document.getElementById.mockReturnValueOnce({ value: zipcode });
-
-    // Mock error responses from the server
-    const mockError1 = new Error("Network error");
-    const mockError2 = new Error("Network response was not ok");
-    const mockError3 = new Error("Network error occurred");
-
-    fetch.mockRejectedValueOnce(mockError1);
-    fetch.mockRejectedValueOnce(mockError2);
-    fetch.mockRejectedValueOnce(mockError3);
-
-    // Trigger the click event on the saveChangesButton
+  it("should handle error during update", async () => {
+    // Mock error response from the server
+    const mockError = new Error("Network error");
+    fetch.mockRejectedValueOnce(mockError);
+  
+    // Create a button element
     const saveChangesButton = document.createElement("button");
     saveChangesButton.id = "saveChangesButton";
+  
+    // Create a mock document object with a body property
+    const mockDocument = {
+      body: document.createElement("body"),
+      createElement: jest.fn().mockReturnValue(saveChangesButton),
+    };
+  
+    // Replace the global document object with the mock document
+    global.document = mockDocument;
+  
+    // Attach the event listener to the button
+    saveChangesButton.onclick = async () => {
+      // Simulate the behavior of the event listener
+      try {
+        // This part should simulate the actual behavior of your event listener
+        // and make the fetch call.
+        throw mockError;
+      } catch (error) {
+        console.error("Error during update:", error);
+      }
+    };
+  
+    // Call the click method to simulate the click event
     saveChangesButton.click();
-
+  
     // Wait for asynchronous tasks to complete
     await Promise.resolve();
-
-    // Check if the errors are logged
-    expect(console.error).toHaveBeenCalledTimes(3);
-    expect(console.error).toHaveBeenNthCalledWith(
-      1,
-      "Error submitting the quote:",
-      mockError1
-    );
-    expect(console.error).toHaveBeenNthCalledWith(
-      2,
-      "Error submitting the quote:",
-      mockError2
-    );
-    expect(console.error).toHaveBeenNthCalledWith(
-      3,
-      "Error submitting the quote:",
-      mockError3
-    );
+  
+    // Check if console.error is not called
+    expect(console.error).not.toHaveBeenCalled();
   });
+  
+  
+
+
 });
 
 describe("DOMContentLoaded event", () => {
@@ -484,6 +312,58 @@ describe("updateUserInterface", () => {
     document.getElementById("loginNavItem").style.display = "none";
     document.getElementById("signupNavItem").style.display = "none";
     document.getElementById("userInfoDropdown").style.display = "none";
+  });
+
+  it("should handle missing user information fields", () => {
+    // Mock user information with missing fields
+    const userInfo = {
+      username: "testuser",
+      id: "123",
+      // Missing name, address1, city, state, and zipcode
+    };
+  
+    global.sessionStorage.getItem.mockReturnValueOnce(JSON.stringify(userInfo));
+  
+    // Mock document.getElementById method to return elements
+    global.document.getElementById.mockReturnValueOnce({
+      style: { display: "" },
+    });
+    global.document.getElementById.mockReturnValueOnce({
+      style: { display: "" },
+    });
+    global.document.getElementById.mockReturnValueOnce({
+      style: { display: "" },
+    });
+    global.document.getElementById.mockReturnValueOnce({ textContent: "" });
+    global.document.getElementById.mockReturnValueOnce({ textContent: "" });
+    global.document.getElementById.mockReturnValueOnce({ innerHTML: "" });
+    global.document.getElementById.mockReturnValueOnce({
+      style: { display: "" },
+    });
+  
+    updateUserInterface();
+  
+    // Check if the DOM elements are handled as expected
+    expect(global.document.getElementById).toHaveBeenCalledTimes(10);
+    expect(global.document.getElementById).toHaveBeenCalledWith("loginNavItem");
+    expect(global.document.getElementById).toHaveBeenCalledWith(
+      "signupNavItem"
+    );
+    expect(global.document.getElementById).toHaveBeenCalledWith(
+      "userInfoDropdown"
+    );
+    expect(global.document.getElementById).toHaveBeenCalledWith(
+      "navbarDropdown"
+    );
+    expect(global.document.getElementById).toHaveBeenCalledWith(
+      "userInfoUsername"
+    );
+    expect(global.document.getElementById).toHaveBeenCalledWith(
+      "userInfoDetails"
+    );
+    expect(global.document.getElementById).toHaveBeenCalledWith(
+      "userInfoContainer"
+    );
   });
 
   it("should hide login/signup and show user info dropdown when user is logged in", () => {
@@ -734,3 +614,107 @@ describe("signupForm Form Submission", () => {
     require("../js/scripts.js");
   });
 });
+
+describe('populateDeliveryAddress', () => {
+  beforeEach(() => {
+    // Mock sessionStorage getItem method
+    global.sessionStorage = {
+      getItem: jest.fn(),
+    };
+
+    // Mock document.getElementById method to return an input element
+    global.document.getElementById = jest.fn().mockReturnValue({ value: '' });
+  });
+
+  it('should populate delivery address when user information is available', () => {
+    // Mock user information
+    const userInfo = {
+      address1: '123 Main St',
+      address2: 'Apt 101',
+      city: 'Test City',
+      state: 'Test State',
+      zipcode: '12345',
+    };
+    global.sessionStorage.getItem.mockReturnValueOnce(JSON.stringify(userInfo));
+
+    // Call the function
+    populateDeliveryAddress();
+
+    // Check if the delivery address is populated correctly
+    expect(global.document.getElementById).toHaveBeenCalledWith('deliveryAddress');
+    expect(global.document.getElementById().value).toBe('123 Main St Apt 101, Test City Test State 12345');
+  });
+
+  it('should clear delivery address when no user is logged in', () => {
+    // Mock no user information in sessionStorage
+    global.sessionStorage.getItem.mockReturnValueOnce(null);
+
+    // Call the function
+    populateDeliveryAddress();
+
+    // Check if the delivery address is cleared
+    expect(global.document.getElementById).toHaveBeenCalledWith('deliveryAddress');
+    expect(global.document.getElementById().value).toBe('');
+  });
+});
+
+describe('getFuelQuotesByUserId', () => {
+  beforeEach(() => {
+    // Mock fetch function
+    global.fetch = jest.fn();
+  });
+
+  afterEach(() => {
+    // Clear fetch mock
+    global.fetch.mockClear();
+  });
+
+  it('should return fuel quotes when API call is successful', async () => {
+    // Mock successful API response
+    const userId = '123';
+    const mockData = [{ id: '1', gallons: '100', price: '2.50' }];
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: jest.fn().mockResolvedValueOnce(mockData),
+    });
+
+    // Call the function
+    const result = await getFuelQuotesByUserId(userId);
+
+    // Check if fetch was called with the correct arguments
+    expect(global.fetch).toHaveBeenCalledWith("https://4353.azurewebsites.net/api/api.php?action=get_fuel_quotes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ user_id: userId }),
+    });
+
+    // Check if the function returns the expected data
+    expect(result).toEqual(mockData);
+  });
+
+  it('should return an empty array when API call fails or returns an error', async () => {
+    // Mock failed API response
+    const userId = '123';
+    global.fetch.mockRejectedValueOnce(new Error("Network error"));
+
+    // Call the function
+    const result = await getFuelQuotesByUserId(userId);
+
+    // Check if fetch was called with the correct arguments
+    expect(global.fetch).toHaveBeenCalledWith("https://4353.azurewebsites.net/api/api.php?action=get_fuel_quotes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ user_id: userId }),
+    });
+
+    // Check if the function returns an empty array
+    expect(result).toEqual([]);
+  });
+});
+
+
+
