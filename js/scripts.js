@@ -161,6 +161,10 @@ document
 
       if (data.error) {
         console.error("Login Error:", data.error);
+        // Display an error message on the page
+        const loginErrorMessageDiv = document.getElementById("loginErrorMessage");
+        loginErrorMessageDiv.textContent = "Username or password is not in the system."; // Custom message for user
+        document.getElementById("loginError").style.display = "block"; // Make error visible
       } else {
         sessionStorage.setItem("userInfo", JSON.stringify(data)); // Save user info in session storage
         $("#loginModal").modal("hide");
@@ -168,6 +172,10 @@ document
       }
     } catch (error) {
       console.error("Error during login:", error);
+      // Display a generic error message if an exception occurs during fetch
+      const loginErrorMessageDiv = document.getElementById("loginErrorMessage");
+      loginErrorMessageDiv.textContent = "An error occurred during login. Please try again.";
+      document.getElementById("loginError").style.display = "block"; // Make error visible
     }
     if (!data.error) {
       displayFuelQuotes(); // Update the fuel quote table after successful login
