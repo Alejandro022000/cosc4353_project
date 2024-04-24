@@ -613,6 +613,8 @@ describe("signupForm Form Submission", () => {
     // Trigger the form submission
     require("../js/scripts.js");
   });
+
+  
 });
 
 describe('populateDeliveryAddress', () => {
@@ -716,5 +718,46 @@ describe('getFuelQuotesByUserId', () => {
   });
 });
 
+describe('populateDeliveryAddress', () => {
+  beforeEach(() => {
+    // Mock sessionStorage getItem method
+    global.sessionStorage = {
+      getItem: jest.fn(),
+    };
 
+    // Mock document.getElementById method to return an input element
+    global.document.getElementById = jest.fn().mockReturnValue({ value: '' });
+  });
+
+  it('should populate delivery address when user information is available', () => {
+    // Mock user information
+    const userInfo = {
+      address1: '123 Main St',
+      address2: 'Apt 101',
+      city: 'Test City',
+      state: 'Test State',
+      zipcode: '12345',
+    };
+    global.sessionStorage.getItem.mockReturnValueOnce(JSON.stringify(userInfo));
+
+    // Call the function
+    populateDeliveryAddress();
+
+    // Check if the delivery address is populated correctly
+    expect(global.document.getElementById).toHaveBeenCalledWith('deliveryAddress');
+    expect(global.document.getElementById().value).toBe('123 Main St Apt 101, Test City Test State 12345');
+  });
+
+  it('should clear delivery address when no user is logged in', () => {
+    // Mock no user information in sessionStorage
+    global.sessionStorage.getItem.mockReturnValueOnce(null);
+
+    // Call the function
+    populateDeliveryAddress();
+
+    // Check if the delivery address is cleared
+    expect(global.document.getElementById).toHaveBeenCalledWith('deliveryAddress');
+    expect(global.document.getElementById().value).toBe('');
+  });
+});
 

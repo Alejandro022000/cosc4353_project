@@ -1,7 +1,24 @@
 const { JSDOM } = require('jsdom');
 
-const dom = new JSDOM('<!doctype html><html><body><div id="signupForm"></div><div id="loginModal"></div><form id="fuelQuoteForm"></form><input id="gallonsRequested"></input><table><tbody id="fuelQuoteTableBody"></tbody></table></body></html>', {
-  url: 'http://localhost'
+const dom = new JSDOM(`
+  <!doctype html>
+  <html>
+  <body>
+    <form id="loginModal">
+      <input id="username-login" />
+      <input id="password-login" />
+      <div id="loginErrorMessage"></div>
+      <div id="loginError" style="display:none;"></div>
+    </form>
+    <div id="signupForm"></div>
+    <form id="fuelQuoteForm"></form>
+    <input id="gallonsRequested"></input>
+    <table>
+      <tbody id="fuelQuoteTableBody"></tbody>
+    </table>
+  </body>
+  </html>`, {
+    url: 'http://localhost'
 });
 
 global.document = dom.window.document;
@@ -12,6 +29,10 @@ global.document.dispatchEvent = jest.fn();
 global.navigator = {
   userAgent: 'node.js',
 };
+
+global.$ = jest.fn(() => ({
+  modal: jest.fn()
+}));
 
 // Mock createElement function
 global.document.createElement = jest.fn().mockImplementation((tagName) => {
