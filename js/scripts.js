@@ -162,8 +162,10 @@ document
       if (data.error) {
         console.error("Login Error:", data.error);
         // Display an error message on the page
-        const loginErrorMessageDiv = document.getElementById("loginErrorMessage");
-        loginErrorMessageDiv.textContent = "Username or password is not in the system."; // Custom message for user
+        const loginErrorMessageDiv =
+          document.getElementById("loginErrorMessage");
+        loginErrorMessageDiv.textContent =
+          "Username or password is not in the system."; // Custom message for user
         document.getElementById("loginError").style.display = "block"; // Make error visible
       } else {
         sessionStorage.setItem("userInfo", JSON.stringify(data)); // Save user info in session storage
@@ -174,7 +176,8 @@ document
       console.error("Error during login:", error);
       // Display a generic error message if an exception occurs during fetch
       const loginErrorMessageDiv = document.getElementById("loginErrorMessage");
-      loginErrorMessageDiv.textContent = "An error occurred during login. Please try again.";
+      loginErrorMessageDiv.textContent =
+        "An error occurred during login. Please try again.";
       document.getElementById("loginError").style.display = "block"; // Make error visible
     }
     if (!data.error) {
@@ -220,12 +223,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
       const userId = userInfo.id;
+      const username = userInfo.username;
 
       const updateUrl =
         "https://4353.azurewebsites.net/api/api.php?action=update_user";
 
       try {
         const requestBody = {
+          username: username,
           id: userId,
           name: name,
           address1: address1,
@@ -259,25 +264,62 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 });
+function calculateFuelPrice(gallons, state, hasHistory) {
+  const currentPricePerGallon = 1.5; // Base price per gallon
+
+  // Define factors
+  const locationFactor = state === "TX" ? 0.02 : 0.04;
+  const rateHistoryFactor = hasHistory ? 0.01 : 0;
+  const gallonsRequestedFactor = gallons > 1000 ? 0.02 : 0.03;
+  const companyProfitFactor = 0.1;
+
+  // Calculate margin
+  const margin =
+    currentPricePerGallon *
+    (locationFactor -
+      rateHistoryFactor +
+      gallonsRequestedFactor +
+      companyProfitFactor);
+  const suggestedPrice = currentPricePerGallon + margin;
+
+  return suggestedPrice;
+}
 
 async function displayFuelQuotes() {
   const userId = JSON.parse(sessionStorage.getItem("userInfo")).id;
-
   const fuelQuotes = await getFuelQuotesByUserId(userId);
-  //console.log(fuelQuotes); // Check if the data is being fetched correctly
 
+  console.log(fuelQuotes);
+  const hasHistory = fuelQuotes.length > 0;
+  sessionStorage.setItem("hasHistory", hasHistory); // Store this for later use in price calculation
+
+  const userInfo = JSON.parse(sessionStorage.getItem("userInfo")); // Assuming userInfo contains the state
+  const state = userInfo.state; // You need to ensure state is stored in userInfo
+  delivery_address = "null";
+  if (userInfo) {
+    // Format the delivery address from user information
+    const fullAddress = `${userInfo.address1 || ""} ${
+      userInfo.address2 || ""
+    }, ${userInfo.city || ""} ${userInfo.state || ""} ${userInfo.zipcode || ""}`
+      .trim()
+      .replace(/\s\s+/g, " ");
+    //console.log("fullAddress: " + fullAddress);
+    delivery_address = fullAddress;
+  }
+  console.log("fuelQuotes");
+  // Continue with the rest of the display logic
   const tableBody = document.getElementById("fuelQuoteTableBody");
   tableBody.innerHTML = ""; // Clear existing rows
-
   fuelQuotes.forEach((quote) => {
+    console.log("fuelQuotes");
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${quote.gallons}</td>
-      <td>${quote.delivery_address}</td>
-      <td>${quote.delivery_date}</td>
-      <td>$${parseFloat(quote.suggested_price).toFixed(2)}</td>
-      <td>$${parseFloat(quote.total_price).toFixed(2)}</td>
-    `;
+          <td>${quote.gallons}</td>
+          <td>${delivery_address}</td>
+          <td>${quote.delivery_date}</td>
+          <td>$${parseFloat(quote.suggested_price).toFixed(2)}</td>
+          <td>$${parseFloat(quote.total_price).toFixed(2)}</td>
+        `;
     tableBody.appendChild(row);
   });
 }
@@ -289,6 +331,7 @@ document.addEventListener("DOMContentLoaded", function () {
     displayFuelQuotes();
   }
 });
+populateDeliveryAddress();
 document
   .getElementById("fuelQuoteForm")
   .addEventListener("submit", async function (event) {
@@ -364,7 +407,6 @@ document
     const suggestedPrice = parseFloat(
       document.getElementById("suggestedPrice").value
     );
-
     // Check if gallons is a number and greater than 0
     if (!isNaN(gallons) && gallons > 0) {
       const totalPrice = gallons * suggestedPrice;
@@ -373,5 +415,32 @@ document
       document.getElementById("totalAmountDue").value = ""; // Clear the total amount due if input is not valid
     }
   });
+document
+  .getElementById("gallonsRequested")
+  .addEventListener("input", function () {
+    const gallons = parseFloat(this.value);
+    if (!isNaN(gallons) && gallons > 0) {
+      const userInfo = JSON.parse(sessionStorage.getItem("userInfo")); // Assuming userInfo contains the user ID and state
+      const state = userInfo.state; // You need to ensure state is stored in userInfo
+      const hasHistory = sessionStorage.getItem("hasHistory") === "true"; // Retrieve history status from session storage
+      const suggestedPrice = calculateFuelPrice(gallons, state, hasHistory);
 
-module.exports = { updateUserInterface, populateDeliveryAddress, getFuelQuotesByUserId, displayFuelQuotes };
+      document.getElementById("suggestedPrice").value =
+        suggestedPrice.toFixed(2); // Update the suggested price field
+
+      // Calculate and update the total amount due
+      const totalPrice = gallons * suggestedPrice;
+      document.getElementById("totalAmountDue").value = totalPrice.toFixed(2); // Format to two decimal places
+    } else {
+      // If input is invalid, clear the fields
+      document.getElementById("suggestedPrice").value = "";
+      document.getElementById("totalAmountDue").value = "";
+    }
+  });
+
+module.exports = {
+  updateUserInterface,
+  populateDeliveryAddress,
+  getFuelQuotesByUserId,
+  displayFuelQuotes,
+};
