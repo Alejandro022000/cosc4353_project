@@ -348,9 +348,15 @@ document
     const deliveryDate = document.getElementById("deliveryDate").value;
     const suggestedPrice = document.getElementById("suggestedPrice").value;
     const totalPrice = document.getElementById("totalAmountDue").value;
-
+    const today = new Date();
+    const formatedDeliveryDate = new Date(deliveryDate);
+    today.setHours(0, 0, 0, 0);
     // Check if the delivery date is valid
-    if (!deliveryDate || deliveryDate === "1900-01-01") {
+    if (
+      !deliveryDate ||
+      deliveryDate === "1900-01-01" ||
+      formatedDeliveryDate < today
+    ) {
       dateError.textContent = "Please enter a valid delivery date.";
       dateError.style.display = "block"; // Make sure the error message is visible
       return; // Stop the function here to prevent submission
