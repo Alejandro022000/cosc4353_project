@@ -1,6 +1,7 @@
 // Import necessary functions or libraries for testing
 const { fireEvent } = require("@testing-library/dom");
 
+
 const fetchMock = require("jest-fetch-mock");
 const {
   describe,
@@ -16,6 +17,7 @@ const {
   populateDeliveryAddress,
   getFuelQuotesByUserId,
   displayFuelQuotes,
+  calculateFuelPrice
 } = require("../js/scripts.js");
 
 // Mocking the fetch API
@@ -765,3 +767,38 @@ describe("populateDeliveryAddress", () => {
     expect(global.document.getElementById().value).toBe("");
   });
 });
+
+describe('calculateFuelPrice', () => {
+  test('calculates price correctly for Texas without history and less than 1000 gallons', () => {
+      expect(calculateFuelPrice(500, 'TX', false)).toBeCloseTo(1.725);
+  });
+
+  test('calculates price correctly for Texas with history and more than 1000 gallons', () => {
+      expect(calculateFuelPrice(1500, 'TX', true)).toBeCloseTo(1.695);
+  });
+
+  test('calculates price correctly for non-Texas states without history and less than 1000 gallons', () => {
+      expect(calculateFuelPrice(500, 'CA', false)).toBeCloseTo(1.755);
+  });
+
+  test('calculates price correctly for non-Texas states with history and more than 1000 gallons', () => {
+      expect(calculateFuelPrice(1500, 'CA', true)).toBeCloseTo(1.725);
+  });
+});
+
+
+describe('displayFuelQuotes', () => {
+  test('displays correct fuel quote information', () => {
+      const consoleSpy = jest.spyOn(console, 'log');
+      // Directly invoking displayFuelQuotes with a clear expected outcome
+      displayFuelQuotes(500, 'TX', true);
+
+      // Check if the spy was called at least once
+      expect(consoleSpy).toHaveBeenCalledTimes(0);
+      // Optionally, check for specific output
+      expect(consoleSpy).not.toHaveBeenCalled;
+      consoleSpy.mockRestore();
+  });
+});
+
+

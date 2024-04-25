@@ -406,6 +406,7 @@ document
       ).innerHTML = `<strong>Error:</strong> ${error.message}`;
     }
   });
+
 document
   .getElementById("gallonsRequested")
   .addEventListener("input", function () {
@@ -421,6 +422,7 @@ document
       document.getElementById("totalAmountDue").value = ""; // Clear the total amount due if input is not valid
     }
   });
+  
 document
   .getElementById("gallonsRequested")
   .addEventListener("input", function () {
@@ -449,4 +451,5 @@ module.exports = {
   populateDeliveryAddress,
   getFuelQuotesByUserId,
   displayFuelQuotes,
+  calculateFuelPrice
 };
